@@ -28,6 +28,9 @@ scripts/backtest/output/
 *.csv
 *.parquet
 
+# 发布平台的本机应用标记文件
+.wbapp_*.genie
+
 # 编辑器与系统
 .vscode/
 .idea/
