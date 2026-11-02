@@ -1,0 +1,48 @@
+{
+  "meta": {
+    "version": "2019-01-01",
+    "updated": "2026-11-02",
+    "source": "国家税务总局关于全面实施新个人所得税法若干征管衔接问题的公告",
+    "note": "政策调整时以官方最新公告为准。本文件是税率的唯一来源，代码里只保留公式。"
+  },
+  "serviceIncome": {
+    "label": "劳务报酬预扣预缴",
+    "threshold": 4000,
+    "deduction": {
+      "flat": 800,
+      "rate": 0.2
+    },
+    "brackets": [
+      { "upper": 20000, "rate": 0.2, "quickDeduction": 0 },
+      { "upper": 50000, "rate": 0.3, "quickDeduction": 2000 },
+      { "upper": null, "rate": 0.4, "quickDeduction": 7000 }
+    ]
+  },
+  "salaryIncome": {
+    "label": "工资薪金累计预扣",
+    "basicDeductionMonthly": 5000,
+    "brackets": [
+      { "upper": 36000, "rate": 0.03, "quickDeduction": 0 },
+      { "upper": 144000, "rate": 0.1, "quickDeduction": 2520 },
+      { "upper": 300000, "rate": 0.2, "quickDeduction": 16920 },
+      { "upper": 420000, "rate": 0.25, "quickDeduction": 31920 },
+      { "upper": 660000, "rate": 0.3, "quickDeduction": 52920 },
+      { "upper": 960000, "rate": 0.35, "quickDeduction": 85920 },
+      { "upper": null, "rate": 0.45, "quickDeduction": 181920 }
+    ]
+  },
+  "annualSettlement": {
+    "label": "综合所得年度汇算",
+    "basicDeductionYearly": 60000,
+    "brackets": [
+      { "upper": 36000, "rate": 0.03, "quickDeduction": 0 },
+      { "upper": 144000, "rate": 0.1, "quickDeduction": 2520 },
+      { "upper": 300000, "rate": 0.2, "quickDeduction": 16920 },
+      { "upper": 420000, "rate": 0.25, "quickDeduction": 31920 },
+      { "upper": 660000, "rate": 0.3, "quickDeduction": 52920 },
+      { "upper": 960000, "rate": 0.35, "quickDeduction": 85920 },
+      { "upper": null, "rate": 0.45, "quickDeduction": 181920 }
+    ],
+    "disclaimer": "本结果为估算，实际以税务部门年度汇算为准"
+  }
+}

@@ -1,0 +1,42 @@
+{
+  "meta": {
+    "version": "1.0.0",
+    "updated": "2026-11-02",
+    "note": "城市坐标用于天气接口参数。默认深圳。"
+  },
+  "default": "shenzhen",
+  "cities": [
+    {
+      "id": "shenzhen",
+      "name": "深圳",
+      "province": "广东",
+      "lat": 22.5431,
+      "lon": 114.0579,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "guangzhou",
+      "name": "广州",
+      "province": "广东",
+      "lat": 23.1291,
+      "lon": 113.2644,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "zhuhai",
+      "name": "珠海",
+      "province": "广东",
+      "lat": 22.2707,
+      "lon": 113.5767,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "shantou",
+      "name": "汕头",
+      "province": "广东",
+      "lat": 23.3541,
+      "lon": 116.6819,
+      "timezone": "Asia/Shanghai"
+    }
+  ]
+}

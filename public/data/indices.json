@@ -1,0 +1,112 @@
+{
+  "meta": {
+    "version": "1.0.0",
+    "updated": "2026-11-02",
+    "note": "所有阈值、权重、文案集中在本文件。代码里不允许出现未命名的数字。normalize 区间写作 [劣端, 优端]，不是 [min, max]。"
+  },
+  "indices": {
+    "drying": {
+      "type": "weighted",
+      "label": "晾晒指数",
+      "inputs": ["temp", "humidity", "windSpeed", "precipProb", "solar"],
+      "weights": {
+        "temp": 0.2,
+        "humidity": 0.3,
+        "windSpeed": 0.2,
+        "precipProb": 0.25,
+        "solar": 0.05
+      },
+      "normalize": {
+        "temp": [10, 32],
+        "humidity": [90, 40],
+        "windSpeed": [0, 5],
+        "precipProb": [80, 0],
+        "solar": [0, 800]
+      },
+      "evidenceLabel": {
+        "temp": "气温",
+        "humidity": "相对湿度",
+        "windSpeed": "风速",
+        "precipProb": "降水概率",
+        "solar": "日照辐射"
+      },
+      "format": {
+        "temp": "{v} ℃",
+        "humidity": "{v}%",
+        "windSpeed": "{v} m/s",
+        "precipProb": "{v}%",
+        "solar": "{v} W/m²"
+      },
+      "bestWindow": {
+        "windowHours": 2,
+        "minScore": 60,
+        "horizonHours": 24,
+        "collectBefore": "18:00",
+        "noWindowText": "全天不建议"
+      },
+      "levels": [
+        { "min": 80, "level": 4, "label": "适宜", "headline": "今天适合晾晒，{bestWindow} 前收衣" },
+        { "min": 60, "level": 3, "label": "一般", "headline": "可以晾，但干得慢，建议延长晾晒时间" },
+        { "min": 40, "level": 2, "label": "较差", "headline": "不建议晾晒，改为室内除湿" },
+        { "min": 0, "level": 1, "label": "不宜", "headline": "今天晾不干，改用烘干或推迟" }
+      ]
+    },
+
+    "damp": {
+      "type": "rule",
+      "label": "返潮预警",
+      "thresholds": {
+        "dewpointMargin": 1.0,
+        "humidityMin": 85,
+        "humidityHours": 6,
+        "windDirs": ["SE", "S", "SW", "SSE", "SSW"],
+        "windSpeedMin": 2.0,
+        "indoorTempDefault": 22,
+        "indoorTempSource": "室内表面温度采用近似值（无实测），优先取过去 72 小时最低气温，缺失时用 22 ℃ 兜底",
+        "indoorTempLookbackHours": 72
+      },
+      "levels": [
+        { "min": 3, "level": 1, "label": "高发", "headline": "回南天预警：墙面地面会返潮，先关朝南窗" },
+        { "min": 2, "level": 2, "label": "注意", "headline": "湿度偏高，衣物易返潮，建议开除湿" },
+        { "min": 1, "level": 3, "label": "轻微", "headline": "湿度略高，留意朝南墙面与地板" },
+        { "min": 0, "level": 4, "label": "无", "headline": "今天没有返潮风险" }
+      ]
+    },
+
+    "umbrella": {
+      "type": "weighted",
+      "label": "出行指数",
+      "inputs": ["precipProb", "windSpeed"],
+      "weights": {
+        "precipProb": 0.75,
+        "windSpeed": 0.25
+      },
+      "normalize": {
+        "precipProb": [80, 0],
+        "windSpeed": [12, 0]
+      },
+      "evidenceLabel": {
+        "precipProb": "降水概率",
+        "windSpeed": "风速"
+      },
+      "format": {
+        "precipProb": "{v}%",
+        "windSpeed": "{v} m/s"
+      },
+      "levels": [
+        { "min": 75, "level": 4, "label": "便利", "headline": "放心出门，不用带伞" },
+        { "min": 50, "level": 3, "label": "一般", "headline": "带把折叠伞更稳妥" },
+        { "min": 25, "level": 2, "label": "不便", "headline": "有降水可能，务必带伞" },
+        { "min": 0, "level": 1, "label": "不宜", "headline": "降水明显，非必要推迟出门" }
+      ]
+    },
+
+    "clothing": {
+      "type": "table",
+      "label": "穿衣建议",
+      "tableRef": "clothing-table.json",
+      "fallbackLevel": 3,
+      "fallbackHeadline": "体感数据缺失，按当前气温参考昨日搭配"
+    }
+  }
+}

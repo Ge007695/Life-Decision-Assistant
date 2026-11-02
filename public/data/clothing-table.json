@@ -1,0 +1,57 @@
+{
+  "meta": {
+    "version": "1.0.0",
+    "updated": "2026-11-02",
+    "note": "按体感温度分段。min 含、max 不含。穿衣组合不写进代码的 if-else。"
+  },
+  "table": [
+    {
+      "min": 32,
+      "max": 99,
+      "level": 4,
+      "label": "炎热",
+      "outfit": "短袖 + 短裤",
+      "extras": ["遮阳帽", "防晒霜", "随身补水"]
+    },
+    {
+      "min": 26,
+      "max": 32,
+      "level": 4,
+      "label": "热",
+      "outfit": "短袖 + 短裤/薄长裤",
+      "extras": ["遮阳伞"]
+    },
+    {
+      "min": 18,
+      "max": 26,
+      "level": 4,
+      "label": "舒适",
+      "outfit": "短袖 + 薄外套",
+      "extras": []
+    },
+    {
+      "min": 10,
+      "max": 18,
+      "level": 3,
+      "label": "偏凉",
+      "outfit": "长袖 + 外套",
+      "extras": []
+    },
+    {
+      "min": 0,
+      "max": 10,
+      "level": 3,
+      "label": "冷",
+      "outfit": "毛衣 + 厚外套",
+      "extras": ["围巾"]
+    },
+    {
+      "min": -99,
+      "max": 0,
+      "level": 2,
+      "label": "严寒",
+      "outfit": "羽绒服 + 保暖内衣",
+      "extras": ["手套", "围巾"]
+    }
+  ]
+}
