@@ -273,6 +273,7 @@ export function createConfig(raw = {}, options = {}) {
     taxRules: raw.taxRules || {},
     clothingTable: raw.clothingTable?.table || [],
     cities: raw.cities?.cities || [],
+    defaultCityId: raw.cities?.default || raw.cities?.cities?.[0]?.id || null,
     checklists: raw.checklists?.checklists || [],
     checklistsMeta: raw.checklists?.meta || {},
     versions: {

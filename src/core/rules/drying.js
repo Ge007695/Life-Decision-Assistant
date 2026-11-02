@@ -103,6 +103,30 @@ function actionsFor(level, window, config) {
  */
 export function evaluate(input = {}, ctx = {}) {
   const indexNode = ctx.index
+
+  // 一项数据都没有时不能拿 0 分冒充“不宜”——那不叫降级，那叫瞎判
+  const weightKeys = Object.keys(indexNode?.weights || {})
+  const provided = weightKeys.filter((key) => Number.isFinite(input[key]))
+  if (weightKeys.length > 0 && provided.length === 0) {
+    return {
+      level: 0,
+      levelLabel: '数据不足',
+      score: 0,
+      headline: '缺少天气数据，暂无法判断今天是否适合晾晒',
+      actions: ['检查网络后重试', '或手工查看湿度与降水概率'],
+      evidence: weightKeys.map((key) => ({
+        key,
+        label: indexNode?.evidenceLabel?.[key] || key,
+        value: '缺失',
+        weight: indexNode.weights[key],
+        contribution: 0,
+        ratio: null,
+        missing: true,
+      })),
+      degraded: true,
+    }
+  }
+
   const { score, evidence, missing } = weightedScore(input, indexNode)
   const levelHit = pickLevel(score, indexNode.levels)
 

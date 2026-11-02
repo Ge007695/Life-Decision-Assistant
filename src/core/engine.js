@@ -59,10 +59,9 @@ function clampNumber(value, min, max, fallback) {
   return Math.min(max, Math.max(min, num))
 }
 
-function nowIso(ctx) {
-  const source = ctx?.config?.checkedAt ? null : (ctx?.now ?? null)
-  const date = source ? new Date(source) : new Date()
-  return date.toISOString()
+function nowIso(now) {
+  const date = now ? new Date(now) : new Date()
+  return Number.isNaN(date.getTime()) ? new Date().toISOString() : date.toISOString()
 }
 
 /**
@@ -101,9 +100,10 @@ function labelForLevel(indexNode, level) {
  * @param {string} id 规则 id，与 indices.json 的键一致
  * @param {object} input 规则输入
  * @param {object} [config] 省略时用 configure() 注入的配置
+ * @param {{now?: string|number|Date}} [options] 注入时钟，回测时用来让 updatedAt 可回放
  * @returns {object} DecisionResult
  */
-export function run(id, input, config = activeConfig) {
+export function run(id, input, config = activeConfig, options = {}) {
   const rule = REGISTRY.get(id)
   if (!rule) return degradedResult(id, `未注册的规则：${id}`)
   if (!config) return degradedResult(id, '配置尚未加载，暂无法判定')
@@ -113,7 +113,7 @@ export function run(id, input, config = activeConfig) {
   const indexNode = config.indices?.[id] ?? null
   if (requiresIndex && !indexNode) return degradedResult(id, `配置中找不到指数 ${id}`)
 
-  const ctx = { config, index: indexNode, now: config?.checkedAt }
+  const ctx = { config, index: indexNode, now: options.now }
 
   let partial
   try {
@@ -150,13 +150,14 @@ export function run(id, input, config = activeConfig) {
  * @param {string[]} ids
  * @param {object} input
  * @param {object} [config]
+ * @param {{now?: string|number|Date}} [options]
  * @returns {object[]} DecisionResult 数组
  */
-export function runBatch(ids, input, config = activeConfig) {
-  return (ids || []).map((id) => run(id, input, config))
+export function runBatch(ids, input, config = activeConfig, options = {}) {
+  return (ids || []).map((id) => run(id, input, config, options))
 }
 
 /** 跑全部已注册规则，回测脚本用 */
-export function runAll(input, config = activeConfig) {
-  return runBatch(listRules(), input, config)
+export function runAll(input, config = activeConfig, options = {}) {
+  return runBatch(listRules(), input, config, options)
 }
