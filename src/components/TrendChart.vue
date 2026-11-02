@@ -5,7 +5,7 @@
  * 调用方传入完整 option，本组件不拼业务数据。
  */
 import { onBeforeUnmount, onMounted, ref, watch } from 'vue'
-import { use } from 'echarts/core'
+import { init, use } from 'echarts/core'
 import { CanvasRenderer } from 'echarts/renderers'
 import { LineChart, BarChart } from 'echarts/charts'
 import {
@@ -41,8 +41,7 @@ function render() {
   chart.setOption(props.option, { notMerge: true })
 }
 
-onMounted(async () => {
-  const { init } = await import('echarts/core')
+onMounted(() => {
   if (!el.value) return
   chart = init(el.value, null, { renderer: 'canvas' })
   render()

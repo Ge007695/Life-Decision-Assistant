@@ -38,6 +38,30 @@ export default [
     },
   },
   {
+    files: ['src/**/*.{js,mjs}'],
+    languageOptions: {
+      globals: {
+        console: 'readonly',
+        setTimeout: 'readonly',
+        clearTimeout: 'readonly',
+        fetch: 'readonly',
+        window: 'readonly',
+        document: 'readonly',
+        localStorage: 'readonly',
+        sessionStorage: 'readonly',
+        navigator: 'readonly',
+        URLSearchParams: 'readonly',
+        AbortController: 'readonly',
+        ResizeObserver: 'readonly',
+        requestAnimationFrame: 'readonly',
+        cancelAnimationFrame: 'readonly',
+        getComputedStyle: 'readonly',
+        HTMLElement: 'readonly',
+        Event: 'readonly',
+      },
+    },
+  },
+  {
     files: ['src/core/**/*.js'],
     rules: {
       'no-restricted-globals': ['error', ...CORE_FORBIDDEN],

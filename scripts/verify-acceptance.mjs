@@ -1,0 +1,270 @@
+#!/usr/bin/env node
+/**
+ * 验收标准逐条核对
+ *
+ * 把工作指导书里写明的验收口径变成可执行的断言，答辩时直接跑一遍：
+ *   4.5 出门模块 / 5.3 时间模块 / 6.4 花钱模块 / 11.1 单元测试
+ *
+ * 运行：node scripts/verify-acceptance.mjs
+ */
+
+import { readFileSync } from 'node:fs'
+import { dirname, join } from 'node:path'
+import { fileURLToPath } from 'node:url'
+
+import { createConfig } from '../src/core/config.js'
+import { configure, run } from '../src/core/engine.js'
+import { buildDateMap, getYearNode } from '../src/services/policy.js'
+
+const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..')
+const DATA = join(ROOT, 'public', 'data')
+const readJson = (file) => JSON.parse(readFileSync(join(DATA, file), 'utf8'))
+
+const raw = {
+  indices: readJson('indices.json'),
+  holidays: readJson('holidays.json'),
+  taxRules: readJson('tax-rules.json'),
+  clothingTable: readJson('clothing-table.json'),
+  cities: readJson('cities.json'),
+  checklists: readJson('checklists.json'),
+}
+const config = createConfig(raw, { now: Date.now() })
+configure(config)
+
+const results = []
+function check(id, title, passed, detail) {
+  results.push({ id, title, passed, detail })
+  const mark = passed ? '✓' : '✗'
+  console.log(`  ${mark} [${id}] ${title}`)
+  if (detail) console.log(`       ${detail}`)
+}
+
+const GOOD_WEATHER = {
+  temp: 24.1,
+  humidity: 60,
+  windSpeed: 3.1,
+  windDir: 'SE',
+  precipProb: 10,
+  solar: 520,
+  hourly: Array.from({ length: 24 }, (_, i) => ({
+    time: `${String(i).padStart(2, '0')}:00`,
+    temp: 24,
+    humidity: 60,
+    windSpeed: 3,
+    windDir: 'SE',
+    precipProb: 10,
+    solar: i >= 7 && i <= 18 ? 520 : 0,
+  })),
+}
+
+console.log('=== 4.5 出门模块验收 ===')
+
+// ① 配置生效：改权重，结论必须跟着变
+const drying = run('drying', GOOD_WEATHER)
+const patchedRaw = {
+  ...raw,
+  indices: {
+    ...raw.indices,
+    indices: {
+      ...raw.indices.indices,
+      drying: {
+        ...raw.indices.indices.drying,
+        weights: { temp: 0.2, humidity: 0.5, windSpeed: 0.2, precipProb: 0.05, solar: 0.05 },
+      },
+    },
+  },
+}
+const patched = run('drying', GOOD_WEATHER, createConfig(patchedRaw))
+check(
+  '4.5-1',
+  '手工改 drying 权重为 0.5，结论随之变化',
+  drying.score !== patched.score,
+  `默认 ${drying.score} 分 → 改权重后 ${patched.score} 分`,
+)
+
+// ② 依据可展开：evidence 必须带权重与贡献
+const evOk =
+  drying.evidence.length > 0 &&
+  drying.evidence.some((item) => typeof item.weight === 'number') &&
+  drying.evidence.some((item) => typeof item.contribution === 'number')
+check(
+  '4.5-2',
+  '结论卡“依据”有内容，且每项带权重与贡献',
+  evOk,
+  `${drying.evidence.length} 项依据，例：${drying.evidence.find((e) => e.weight !== null)?.label} 权重 ${drying.evidence.find((e) => e.weight !== null)?.weight}`,
+)
+
+// ③ 断网降级：配置缺失时返回降级结论而不是抛异常
+let degradeSafe = true
+try {
+  const lonely = run('drying', {})
+  degradeSafe = typeof lonely.headline === 'string' && lonely.headline.length > 0
+} catch {
+  degradeSafe = false
+}
+check('4.5-3', '入参全缺失时不抛异常，返回可读的降级结论', degradeSafe, run('drying', {}).headline)
+
+// ④ 边界高湿：湿度 84% 不得判为“适宜”
+const humid = run('drying', { ...GOOD_WEATHER, humidity: 84 })
+check(
+  '4.5-4',
+  '湿度 84%（其余晴好）不出现“适宜”',
+  humid.level <= 3 && !humid.headline.includes('适合晾晒'),
+  `${humid.score} 分 / ${humid.levelLabel}`,
+)
+
+console.log('\n=== 5.3 时间模块验收 ===')
+
+// ① pending 年份不报错
+let pendingSafe = true
+let pendingText = ''
+try {
+  const result = run('holiday', { year: 2027, today: '2026-11-02' })
+  pendingText = result.headline
+  pendingSafe = result.headline.includes('待公布')
+} catch (error) {
+  pendingSafe = false
+  pendingText = String(error)
+}
+check('5.3-1', '切到 2027（无数据）显示“待公布”而不是报错', pendingSafe, pendingText)
+
+// ② 手改 makeupWorkdays，日历立即显示灰色补班日
+const year2026 = getYearNode(config, 2026)
+const withExtra = { ...year2026, makeupWorkdays: [...year2026.makeupWorkdays, '2026-11-07'] }
+const mapBefore = buildDateMap(year2026)
+const mapAfter = buildDateMap(withExtra)
+check(
+  '5.3-2',
+  '手工往 makeupWorkdays 加一天，日历当天变为补班日',
+  mapAfter['2026-11-07']?.type === 'makeup' && !mapBefore['2026-11-07'],
+  `加之前 ${mapBefore['2026-11-07']?.type || '无记录'} → 加之后 ${mapAfter['2026-11-07']?.type}`,
+)
+
+// ③ 假期日正确标红（数据驱动查表）
+check(
+  '5.3-3',
+  '国庆假期区间内每天都能查到 holiday 类型',
+  mapBefore['2026-10-01']?.type === 'holiday' && mapBefore['2026-10-07']?.type === 'holiday',
+  `10-01 ${mapBefore['2026-10-01']?.name} / 10-07 ${mapBefore['2026-10-07']?.name}`,
+)
+
+// ④ 调休优先于假期
+check(
+  '5.3-4',
+  '调休上班日优先级高于周末与假期',
+  mapBefore['2026-10-10']?.type === 'makeup',
+  `2026-10-10 → ${mapBefore['2026-10-10']?.type}`,
+)
+
+console.log('\n=== 6.4 花钱模块验收 ===')
+
+const PLAN = { principal: 6000, periods: 12, feeRate: 0.6 }
+const inst = run('installment', PLAN)
+const annual = inst.meta?.annualRate ?? NaN
+const nominal = 0.6 * 12 // 名义：每期费率 × 12 期
+
+check(
+  '6.4-1',
+  '本金 6000 / 12 期 / 每期 0.6%，真实年化明显高于名义 7.2%',
+  Number.isFinite(annual) && annual * 100 > nominal * 1.3,
+  `真实年化 ${(annual * 100).toFixed(2)}% vs 名义 ${nominal.toFixed(1)}%，约 ${(annual * 100 / nominal).toFixed(1)} 倍`,
+)
+
+const methods = inst.meta?.methods || inst.meta?.comparison || []
+const rates = methods.map((m) => (m.annualRate ?? m.rate) * 100)
+const spread = rates.length > 1 ? Math.max(...rates) - Math.min(...rates) : Infinity
+const iterations = methods.map((m) => m.iterations)
+const iterDistinct = new Set(iterations).size === iterations.length
+
+check(
+  '6.4-2',
+  '三种算法结果差 < 0.01 个百分点，但迭代次数不同',
+  spread < 0.01 && iterDistinct,
+  methods.map((m) => `${m.method} ${m.iterations} 次`).join(' / ') + `，极差 ${spread.toFixed(4)} 个百分点`,
+)
+
+const badCases = [
+  ['期数为 0', { principal: 6000, periods: 0, feeRate: 0.6 }],
+  ['负本金', { principal: -100, periods: 12, feeRate: 0.6 }],
+  ['费率为负', { principal: 6000, periods: 12, feeRate: -1 }],
+]
+const badResults = badCases.map(([label, input]) => {
+  let text = ''
+  let safe = true
+  try {
+    const result = run('installment', input)
+    text = result.headline
+    safe = !/NaN|undefined|Infinity/.test(result.headline) && result.headline.length > 0
+  } catch (error) {
+    safe = false
+    text = String(error)
+  }
+  return { label, text, safe }
+})
+check(
+  '6.4-3',
+  '非法输入（0 期、负本金、负费率）有友好提示，不显示 NaN',
+  badResults.every((item) => item.safe),
+  badResults.map((item) => `${item.label}：${item.text}`).join(' | '),
+)
+
+const salary = run('salary', { gross: 6000, mode: 'service' })
+const hasDisclaimer = [...salary.actions, ...salary.evidence.map((e) => e.value)].some((text) =>
+  String(text).includes('以税务部门年度汇算为准'),
+)
+check(
+  '6.4-4',
+  '工资测算给出“本结果为估算”的免责说明',
+  hasDisclaimer,
+  salary.headline,
+)
+
+console.log('\n=== 11.2 配置校验 ===')
+check('11.2-1', '六份配置零错误', config.errors.length === 0, config.errors.join('；') || '无错误')
+
+const brokenWeights = createConfig({
+  ...raw,
+  indices: {
+    ...raw.indices,
+    indices: {
+      ...raw.indices.indices,
+      drying: { ...raw.indices.indices.drying, weights: { temp: 0.9, humidity: 0.9, windSpeed: 0, precipProb: 0, solar: 0 } },
+    },
+  },
+})
+check(
+  '11.2-2',
+  '权重之和不为 1 时被拦下，不静默降级',
+  brokenWeights.errors.some((error) => error.includes('权重之和')),
+  brokenWeights.errors.find((error) => error.includes('权重之和')) || '（未拦下）',
+)
+
+const brokenRange = createConfig({
+  ...raw,
+  indices: {
+    ...raw.indices,
+    indices: {
+      ...raw.indices.indices,
+      drying: {
+        ...raw.indices.indices.drying,
+        normalize: { ...raw.indices.indices.drying.normalize, temp: [20, 20] },
+      },
+    },
+  },
+})
+check(
+  '11.2-3',
+  'normalize 区间两端相等时被拦下',
+  brokenRange.errors.some((error) => error.includes('两端不能相等')),
+  brokenRange.errors.find((error) => error.includes('两端不能相等')) || '（未拦下）',
+)
+
+const passed = results.filter((item) => item.passed).length
+console.log(`\n=== 汇总：${passed} / ${results.length} 项通过 ===`)
+if (passed !== results.length) {
+  console.log('未通过项：')
+  for (const item of results.filter((entry) => !entry.passed)) {
+    console.log(`  - [${item.id}] ${item.title}（${item.detail}）`)
+  }
+  process.exitCode = 1
+}

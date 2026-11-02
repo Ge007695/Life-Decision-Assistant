@@ -1,6 +1,6 @@
 {
   "name": "decision-assistant",
-  "version": "0.1.0",
+  "version": "0.7.0",
   "private": true,
   "type": "module",
   "description": "生活决策助手 — 面向日常决策的规则引擎（深圳生活场景）",
@@ -11,6 +11,8 @@
     "lint": "eslint .",
     "test": "node --test tests/",
     "m1": "node scripts/m1-skeleton.mjs",
+    "verify": "node scripts/verify-acceptance.mjs",
+    "smoke": "node scripts/ssr-check.mjs",
     "irr:compare": "node scripts/experiments/irr-compare.mjs"
   },
   "dependencies": {
