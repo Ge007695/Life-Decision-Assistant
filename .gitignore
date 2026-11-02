@@ -1,0 +1,38 @@
+# Office 临时锁文件
+~$*
+*.tmp
+*.temp
+
+# 预览渲染件（排版校对用，不进仓库）
+output/*/working/*.png
+output/*/working/*.pdf
+
+# 本地记忆与工具数据
+.workbuddy/
+
+# 依赖与构建产物
+node_modules/
+dist/
+build/
+*.local
+
+# 环境与密钥
+.env
+.env.*
+!.env.example
+
+# 数据与缓存
+scripts/backtest/data/
+scripts/backtest/output/
+*.csv
+*.parquet
+
+# 编辑器与系统
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# 构建中间产物（与最终交付重复）
+output/*/working/*.docx

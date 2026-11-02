@@ -1,0 +1,41 @@
+request_id: 20261026-workguide
+created_at: "2026-10-26T22:45:00+08:00"
+updated_at: "2026-10-26T23:22:00+08:00"
+current_stage: 3
+entry_type: full_pipeline
+stage_chain: [1, 2, 3]
+output_docx_path: "C:\\Users\\25326\\Desktop\\创新项目\\生活决策助手项目工作指导书.docx"
+output_docx_user_specified: true
+workspace: "C:/Users/25326/Desktop/创新项目"
+stages:
+  stage_0:
+    status: completed
+    completed_at: "2026-10-26T22:45:00+08:00"
+    decision: "无既有文档 + 创作动词（写一个项目工作指导书）→ full_pipeline (S1→S2→S3)"
+  stage_1:
+    status: completed
+    completed_at: "2026-10-26T22:52:00+08:00"
+    output_path: "stage1/final_draft.md"
+    genre: general
+    expert_used: general-writer
+    route_tag: general_writing
+  stage_2:
+    status: completed
+    completed_at: "2026-10-26T23:15:00+08:00"
+    route: html
+    html_sub: template
+    output_path: "stage2/formatted-生活决策助手项目工作指导书.html"
+    output_format: html
+    skills_invoked: [design-token, doc-typeset]
+    fallback: false
+  stage_3:
+    status: completed
+    completed_at: "2026-10-26T23:20:00+08:00"
+    executor: doc-converter
+    input_format: html
+    output_path: "C:\\Users\\25326\\Desktop\\创新项目\\生活决策助手项目工作指导书.docx"
+    skill_used: ["html-to-doc"]
+    present_files_opened: true
+    fallback: false
+    fallback_reason: null
+consistency_check: "S1→S2→S3 链路完整；preflight 通过；verify 通过（292 段无缺失，49 个标题样式绑定）；成品 23 页"
