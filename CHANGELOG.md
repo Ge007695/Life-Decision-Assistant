@@ -1,0 +1,84 @@
+# 变更记录
+
+格式参照 Keep a Changelog，版本按语义化版本号。每条版本对应一个 git 标签，
+标签名写在标题里——出问题能退回去，结题时这份记录本身就是进度证明（工作指导书 10.2）。
+
+当前发布版本以 `package.json` 的 `version` 为准。
+
+---
+
+## v0.7.0 · 四模块齐全　`tag: m5`　2026-11-02
+
+M2 首页、M3 出门完整、M4 时间模块、M5 花钱模块在同一批里做完，
+因此只打 `m5` 一个标签——给同一个提交连打四个标签，等于制造一份假进度。
+
+### 新增
+
+- **出门模块**：`src/modules/outing/` 的 `buildWeatherInput`（接口字段 → 内核入参的唯一适配点）
+  与 `useOuting`（取数、四条规则批量调度、风险优先挑横幅、体感反馈校准）。
+  首页按 4.4 的顺序排版：结论横幅 → 指数条组 → 出门清单 → 最佳时间窗图 → 7 天简表。
+- **时间模块**：`src/modules/time/` 的倒计时与日历工具，`CalendarGrid.vue` 数据驱动渲染，
+  假期红 / 调休灰 / 周末蓝三种配色，优先级由 `policy.buildDateMap` 决定，模板里不写判断。
+- **花钱模块**：`src/modules/money/` 的校验、适配与两个组合式函数。
+  工资测算含劳务报酬与工资薪金双口径对比、年度汇算提示（带免责声明）；
+  分期含现金流表、三算法对比表、最多 4 组方案并排。
+- **办事模块**：六条办事清单，材料可勾选并记进度，顶部固定展示信息采集日期与免责声明。
+- **设置页**：城市、室内温度、体感偏移、本地数据管理、配置版本与政策来源。
+- **验证脚本**：`scripts/verify-acceptance.mjs`（15 项验收标准逐条断言）、
+  `scripts/ssr-check.mjs`（五个页面真实渲染冒烟测试）。
+- **实验脚本**：`scripts/experiments/irr-compare.mjs` 输出五张对比表（逐项、名义 vs 真实、
+  扫描步长敏感性、牛顿初值敏感性、边界情况）。
+
+### 变更
+
+- `createConfig()` 补 `defaultCityId`，页面不再需要硬编码城市 id。
+- `run` / `runBatch` / `runAll` 增加 `options.now`，回测可注入时钟，`updatedAt` 变为可回放。
+- `holidays.json` 的 `meta` 补 `source`，设置页可展示政策依据。
+- 晾晒指数在五项输入全缺失时不再给出"不宜"的判定，改为"数据不足"的降级结论。
+
+### 验证
+
+- `npm run test`：84 条用例全过。
+- `npm run lint`：零报错；实测往 `src/core/` 注入 `fetch` 会被 `no-restricted-globals` 拦下。
+- `node scripts/verify-acceptance.mjs`：4.5 / 5.3 / 6.4 / 11.2 共 15 项全部通过
+  （6000 元 12 期 0.6% → 真实年化 13.84%，三算法极差 0.0007 个百分点，迭代次数 31/3/10991）。
+- `node scripts/ssr-check.mjs`：五个页面渲染无异常、无 Vue 警告。
+- `npm run build`：产物约 142 kB（gzip 54 kB）+ 首页图表按需加载。
+
+### 已知问题
+
+- 晾晒指数在 729 天真实数据里只有 7 天给出"适宜"：80 分阈值与归一化区间不匹配，
+  用户实际长期看到"别晾"。这是回测暴露出的产品问题，需要产品侧决策（调阈值还是调区间）。
+- 拟合权重（77.8%）跑不赢朴素基线（78.3%），说明加权结构在本数据上没有超过
+  "今天不下雨所以明天也不下"的信息量。如实写进报告，不做粉饰。
+- `ActionList` 用"下标 + 文案"作勾选键，动作条数随天气变化时旧勾选可能错位。
+- 可用性测试（20 人）与公网部署未开始。
+
+---
+
+## v0.1.0 · M1 骨架　`tag: m1`　2026-11-02
+
+第一个能跑通的版本。判据：命令行能打印出一个合法的 DecisionResult。
+
+### 新增
+
+- **配置层**：`public/data/` 六份 JSON（`indices` / `holidays` / `tax-rules` /
+  `clothing-table` / `cities` / `checklists`），权重、阈值、政策、文案全部外置。
+- **内核层**：`src/core/config.js` 的 `createConfig(raw)` 做 Schema 校验与深冻结；
+  `src/core/engine.js` 提供 `run` / `runBatch` / `runAll`，统一补全 DecisionResult 的公共字段并替换文案占位符。
+- **规则**：晾晒、返潮、带伞、穿衣、假期、工资、分期共 7 条，版本 v1.0.0；
+  返潮的 `level` 反向（3 条条件全中 → level 1），首页横幅只需取最低等级者。
+- **工具**：`normalize`（`[劣端, 优端]` 归一化与加权打分）、`dewpoint`（Magnus）、
+  `apparent-temp`（Steadman）、`irr`（二分 / 牛顿 / 扫描插值三算法）。
+- **服务层**：`weather`（Open-Meteo 取数 + 24 小时缓存 + 失败沿用旧缓存并标注时间）、
+  `storage`（`lda:` 前缀封装，隐私模式下降级为内存态）、`policy`（政策配置摊平成页面可用的形状）。
+- **组件层**：`DecisionCard` / `ScoreBar` / `ActionList` / `FormField` / `TrendChart`。
+- **回测**：`scripts/backtest/` 下四个脚本。`run_rule.js` 用 `fs` + `createConfig` 在 Node 里跑同一份规则，
+  保证"回测的模型"与"线上的模型"是同一个；Python 只做数据清洗、批量调用与统计，且只用标准库。
+
+### 验证
+
+- `npm run m1`：配置校验通过，DecisionResult 十个必备字段齐全，改动权重后结论随配置变化。
+- `npm run test`：84 条用例全过（每个规则典型值 / 边界值 / 异常值）。
+- 回测：真实归档数据 729 天（2024-10-29 ~ 2026-10-28）跑通，晾晒经验权重准确率 66.8%；
+  分期三算法在 3/6/12/24/36 期下结果一致（最大差 0.004 个百分点）。
