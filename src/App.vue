@@ -131,6 +131,7 @@ const hasConfigError = computed(() => configErrors.length > 0)
   font-size: 14px;
   font-weight: 650;
   letter-spacing: 0.01em;
+  white-space: nowrap;
 }
 
 .brand-text small {
@@ -192,13 +193,36 @@ const hasConfigError = computed(() => configErrors.length > 0)
 }
 
 @media (max-width: 600px) {
+  .app-header-inner {
+    gap: 8px;
+  }
+
   .brand-text small {
     display: none;
   }
 
+  /* 品牌名不许换行，改为压缩导航内边距——两行标题比挤一点更难看 */
+  .brand-text strong {
+    font-size: 13px;
+  }
+
   .nav-item {
-    padding: 5px 10px;
+    padding: 4px 9px;
     font-size: 12px;
+  }
+}
+
+@media (max-width: 400px) {
+  .app-header-inner {
+    padding: 10px 12px;
+  }
+
+  .brand-text strong {
+    font-size: 12.5px;
+  }
+
+  .nav-item {
+    padding: 4px 7px;
   }
 }
 </style>
