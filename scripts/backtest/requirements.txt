@@ -1,0 +1,18 @@
+# 回测脚本依赖说明
+#
+# 本目录下的 Python 脚本**只使用标准库**（urllib / json / csv / statistics / subprocess /
+# hashlib / pathlib / argparse / random / math），本机默认解释器
+#   C:/Users/25326/.workbuddy/binaries/python/envs/default/Scripts/python.exe
+# 未安装任何科学计算包也能直接跑通 fetch_history.py / backtest_indices.py / irr_backtest.py。
+#
+# 因此本文件默认不列任何必需依赖；留空即为正确状态。
+#
+# 若日后数据量增长到十万级以上、或要做时间序列交叉验证，可以考虑安装下面这些包来加速，
+# 但**主流程不得依赖它们**——评审机器上不一定装得动。
+#
+# pandas>=2.0        # 读 CSV、按月分组聚合；脚本当前用 csv + dict 手工实现
+# numpy>=1.26        # 网格搜索向量化；脚本当前用纯 Python 枚举 3876 种组合
+#                     # 本机实测：729 天 × 3876 组合约 1.5 秒，没有必要引入
+#
+# 安装方式（若确需）：
+#   "C:/Users/25326/.workbuddy/binaries/python/envs/default/Scripts/python.exe" -m pip install pandas numpy

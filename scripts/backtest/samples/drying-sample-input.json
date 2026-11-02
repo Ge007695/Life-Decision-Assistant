@@ -1,0 +1,20 @@
+{
+  "temp": 27.4,
+  "humidity": 62,
+  "windSpeed": 3.2,
+  "windDir": "SE",
+  "precipProb": 10,
+  "solar": 640,
+  "hourly": [
+    { "time": "09:00", "temp": 26.1, "humidity": 70, "windSpeed": 2.8, "windDir": "SE", "precipProb": 15, "solar": 480 },
+    { "time": "10:00", "temp": 27.4, "humidity": 65, "windSpeed": 3.2, "windDir": "SE", "precipProb": 10, "solar": 620 },
+    { "time": "11:00", "temp": 28.6, "humidity": 60, "windSpeed": 3.6, "windDir": "SSE", "precipProb": 8, "solar": 740 },
+    { "time": "12:00", "temp": 29.5, "humidity": 57, "windSpeed": 4.0, "windDir": "S", "precipProb": 6, "solar": 810 },
+    { "time": "13:00", "temp": 30.1, "humidity": 55, "windSpeed": 4.2, "windDir": "S", "precipProb": 5, "solar": 830 },
+    { "time": "14:00", "temp": 30.4, "humidity": 54, "windSpeed": 4.1, "windDir": "SSW", "precipProb": 5, "solar": 790 },
+    { "time": "15:00", "temp": 30.0, "humidity": 56, "windSpeed": 3.8, "windDir": "SSW", "precipProb": 8, "solar": 660 },
+    { "time": "16:00", "temp": 29.2, "humidity": 59, "windSpeed": 3.4, "windDir": "SW", "precipProb": 10, "solar": 470 },
+    { "time": "17:00", "temp": 28.1, "humidity": 63, "windSpeed": 3.0, "windDir": "SW", "precipProb": 12, "solar": 240 },
+    { "time": "18:00", "temp": 27.0, "humidity": 68, "windSpeed": 2.6, "windDir": "SW", "precipProb": 15, "solar": 60 }
+  ]
+}
