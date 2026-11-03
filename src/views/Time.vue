@@ -14,6 +14,7 @@ import * as policy from '@/services/policy.js'
 import { LEGEND, WEEKDAYS, withMeta, shortDate } from '@/modules/time/calendar.js'
 import { buildCountdown, yearOf } from '@/modules/time/countdown.js'
 import CalendarGrid from '@/modules/time/CalendarGrid.vue'
+import TripPlan from '@/modules/time/TripPlan.vue'
 
 const config = inject('config', {})
 
@@ -171,6 +172,9 @@ const holidaysVersion = computed(() => config?.versions?.holidays || '—')
         <p class="faint tiny">补班日与假期同源，来自 {{ source }}。</p>
       </section>
     </template>
+
+    <!-- T-5 假期出行准备：跨模块联动，调内核穿衣与带伞规则 -->
+    <TripPlan />
 
     <!-- T-4 学期节点 -->
     <section class="card stack-sm">
