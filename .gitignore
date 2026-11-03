@@ -23,9 +23,12 @@ build/
 !.env.example
 
 # 数据与缓存
+# 原始数据不随仓库分发，仓库只记录数据来源（见 docs/data-source.md）；
+# 但回测报表 report.md / irr-report.md 是指导书十三章要求的两份交付物，
+# 必须进仓库，所以这里只按扩展名排除中间数据，不整目录排除
 scripts/backtest/data/
-scripts/backtest/output/
-*.csv
+scripts/backtest/output/**/*.csv
+scripts/backtest/output/**/*.json
 *.parquet
 
 # 发布平台的本机应用标记文件
