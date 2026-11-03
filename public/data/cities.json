@@ -1,41 +1,2971 @@
 {
   "meta": {
-    "version": "1.0.0",
-    "updated": "2026-11-02",
-    "note": "城市坐标用于天气接口参数。默认深圳。"
+    "version": "2.0.0",
+    "updated": "2026-11-03",
+    "note": "全国地级市及港澳台坐标，用于天气接口参数；由 scripts/build-cities.mjs 生成，请勿手改。",
+    "source": "阿里 DataV 行政区划 GeoJSON（areas_v3）",
+    "count": 370
   },
   "default": "shenzhen",
   "cities": [
     {
-      "id": "shenzhen",
-      "name": "深圳",
+      "id": "340800",
+      "name": "安庆",
+      "province": "安徽",
+      "lat": 30.5088,
+      "lon": 117.0436,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "340300",
+      "name": "蚌埠",
+      "province": "安徽",
+      "lat": 32.9397,
+      "lon": 117.3632,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "341600",
+      "name": "亳州",
+      "province": "安徽",
+      "lat": 33.8693,
+      "lon": 115.7829,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "341700",
+      "name": "池州",
+      "province": "安徽",
+      "lat": 30.656,
+      "lon": 117.4892,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "341100",
+      "name": "滁州",
+      "province": "安徽",
+      "lat": 32.3036,
+      "lon": 118.3163,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "341200",
+      "name": "阜阳",
+      "province": "安徽",
+      "lat": 32.897,
+      "lon": 115.8197,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "340100",
+      "name": "合肥",
+      "province": "安徽",
+      "lat": 31.8612,
+      "lon": 117.283,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "340600",
+      "name": "淮北",
+      "province": "安徽",
+      "lat": 33.9717,
+      "lon": 116.7947,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "340400",
+      "name": "淮南",
+      "province": "安徽",
+      "lat": 32.6476,
+      "lon": 117.0183,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "341000",
+      "name": "黄山",
+      "province": "安徽",
+      "lat": 29.7092,
+      "lon": 118.3173,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "341500",
+      "name": "六安",
+      "province": "安徽",
+      "lat": 31.7529,
+      "lon": 116.5077,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "340500",
+      "name": "马鞍山",
+      "province": "安徽",
+      "lat": 31.6894,
+      "lon": 118.5079,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "341300",
+      "name": "宿州",
+      "province": "安徽",
+      "lat": 33.6339,
+      "lon": 116.9841,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "340700",
+      "name": "铜陵",
+      "province": "安徽",
+      "lat": 30.9299,
+      "lon": 117.8166,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "340200",
+      "name": "芜湖",
+      "province": "安徽",
+      "lat": 31.3263,
+      "lon": 118.3765,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "341800",
+      "name": "宣城",
+      "province": "安徽",
+      "lat": 30.9457,
+      "lon": 118.758,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "820000",
+      "name": "澳门",
+      "province": "澳门",
+      "lat": 22.199,
+      "lon": 113.5491,
+      "timezone": "Asia/Macau"
+    },
+    {
+      "id": "110000",
+      "name": "北京",
+      "province": "北京",
+      "lat": 39.905,
+      "lon": 116.4053,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "500000",
+      "name": "重庆",
+      "province": "重庆",
+      "lat": 29.5332,
+      "lon": 106.505,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "350100",
+      "name": "福州",
+      "province": "福建",
+      "lat": 26.0753,
+      "lon": 119.3062,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "350800",
+      "name": "龙岩",
+      "province": "福建",
+      "lat": 25.0916,
+      "lon": 117.0298,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "350700",
+      "name": "南平",
+      "province": "福建",
+      "lat": 26.6356,
+      "lon": 118.1785,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "350900",
+      "name": "宁德",
+      "province": "福建",
+      "lat": 26.6592,
+      "lon": 119.5271,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "350300",
+      "name": "莆田",
+      "province": "福建",
+      "lat": 25.431,
+      "lon": 119.0076,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "350500",
+      "name": "泉州",
+      "province": "福建",
+      "lat": 24.9089,
+      "lon": 118.5894,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "350400",
+      "name": "三明",
+      "province": "福建",
+      "lat": 26.2654,
+      "lon": 117.635,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "350200",
+      "name": "厦门",
+      "province": "福建",
+      "lat": 24.4905,
+      "lon": 118.1102,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "350600",
+      "name": "漳州",
+      "province": "福建",
+      "lat": 24.5109,
+      "lon": 117.6618,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "620400",
+      "name": "白银",
+      "province": "甘肃",
+      "lat": 36.5457,
+      "lon": 104.1736,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "621100",
+      "name": "定西",
+      "province": "甘肃",
+      "lat": 35.5796,
+      "lon": 104.6263,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "623000",
+      "name": "甘南藏族自治州",
+      "province": "甘肃",
+      "lat": 34.9864,
+      "lon": 102.911,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "620200",
+      "name": "嘉峪关",
+      "province": "甘肃",
+      "lat": 39.7865,
+      "lon": 98.2773,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "620300",
+      "name": "金昌",
+      "province": "甘肃",
+      "lat": 38.5142,
+      "lon": 102.1879,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "620900",
+      "name": "酒泉",
+      "province": "甘肃",
+      "lat": 39.744,
+      "lon": 98.5108,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "620100",
+      "name": "兰州",
+      "province": "甘肃",
+      "lat": 36.058,
+      "lon": 103.8236,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "622900",
+      "name": "临夏回族自治州",
+      "province": "甘肃",
+      "lat": 35.5994,
+      "lon": 103.212,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "621200",
+      "name": "陇南",
+      "province": "甘肃",
+      "lat": 33.3886,
+      "lon": 104.9294,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "620800",
+      "name": "平凉",
+      "province": "甘肃",
+      "lat": 35.5428,
+      "lon": 106.6847,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "621000",
+      "name": "庆阳",
+      "province": "甘肃",
+      "lat": 35.7342,
+      "lon": 107.6384,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "620500",
+      "name": "天水",
+      "province": "甘肃",
+      "lat": 34.5785,
+      "lon": 105.725,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "620600",
+      "name": "武威",
+      "province": "甘肃",
+      "lat": 37.93,
+      "lon": 102.6347,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "620700",
+      "name": "张掖",
+      "province": "甘肃",
+      "lat": 38.9329,
+      "lon": 100.4555,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "445100",
+      "name": "潮州",
       "province": "广东",
-      "lat": 22.5431,
-      "lon": 114.0579,
+      "lat": 23.6617,
+      "lon": 116.6323,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "441900",
+      "name": "东莞",
+      "province": "广东",
+      "lat": 23.0462,
+      "lon": 113.7463,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "440600",
+      "name": "佛山",
+      "province": "广东",
+      "lat": 23.0288,
+      "lon": 113.1227,
       "timezone": "Asia/Shanghai"
     },
     {
       "id": "guangzhou",
       "name": "广州",
       "province": "广东",
-      "lat": 23.1291,
-      "lon": 113.2644,
+      "lat": 23.1252,
+      "lon": 113.2806,
       "timezone": "Asia/Shanghai"
     },
     {
-      "id": "zhuhai",
-      "name": "珠海",
+      "id": "441600",
+      "name": "河源",
       "province": "广东",
-      "lat": 22.2707,
-      "lon": 113.5767,
+      "lat": 23.7463,
+      "lon": 114.6978,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "441300",
+      "name": "惠州",
+      "province": "广东",
+      "lat": 23.0794,
+      "lon": 114.4126,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "440700",
+      "name": "江门",
+      "province": "广东",
+      "lat": 22.5904,
+      "lon": 113.0949,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "445200",
+      "name": "揭阳",
+      "province": "广东",
+      "lat": 23.5438,
+      "lon": 116.3557,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "440900",
+      "name": "茂名",
+      "province": "广东",
+      "lat": 21.6598,
+      "lon": 110.9192,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "441400",
+      "name": "梅州",
+      "province": "广东",
+      "lat": 24.2991,
+      "lon": 116.1176,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "441800",
+      "name": "清远",
+      "province": "广东",
+      "lat": 23.685,
+      "lon": 113.0512,
       "timezone": "Asia/Shanghai"
     },
     {
       "id": "shantou",
       "name": "汕头",
       "province": "广东",
-      "lat": 23.3541,
-      "lon": 116.6819,
+      "lat": 23.371,
+      "lon": 116.7085,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "441500",
+      "name": "汕尾",
+      "province": "广东",
+      "lat": 22.7745,
+      "lon": 115.3642,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "440200",
+      "name": "韶关",
+      "province": "广东",
+      "lat": 24.8013,
+      "lon": 113.5915,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "shenzhen",
+      "name": "深圳",
+      "province": "广东",
+      "lat": 22.547,
+      "lon": 114.0859,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "441700",
+      "name": "阳江",
+      "province": "广东",
+      "lat": 21.8592,
+      "lon": 111.9751,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "445300",
+      "name": "云浮",
+      "province": "广东",
+      "lat": 22.9298,
+      "lon": 112.0444,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "440800",
+      "name": "湛江",
+      "province": "广东",
+      "lat": 21.2749,
+      "lon": 110.365,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "441200",
+      "name": "肇庆",
+      "province": "广东",
+      "lat": 23.0515,
+      "lon": 112.4725,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "442000",
+      "name": "中山",
+      "province": "广东",
+      "lat": 22.5211,
+      "lon": 113.3824,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "zhuhai",
+      "name": "珠海",
+      "province": "广东",
+      "lat": 22.225,
+      "lon": 113.554,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "451000",
+      "name": "百色",
+      "province": "广西",
+      "lat": 23.8977,
+      "lon": 106.6163,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "450500",
+      "name": "北海",
+      "province": "广西",
+      "lat": 21.4733,
+      "lon": 109.1193,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "451400",
+      "name": "崇左",
+      "province": "广西",
+      "lat": 22.4041,
+      "lon": 107.3539,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "450600",
+      "name": "防城港",
+      "province": "广西",
+      "lat": 21.6146,
+      "lon": 108.3455,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "450800",
+      "name": "贵港",
+      "province": "广西",
+      "lat": 23.0936,
+      "lon": 109.6021,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "450300",
+      "name": "桂林",
+      "province": "广西",
+      "lat": 25.2742,
+      "lon": 110.2991,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "451200",
+      "name": "河池",
+      "province": "广西",
+      "lat": 24.6959,
+      "lon": 108.0621,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "451100",
+      "name": "贺州",
+      "province": "广西",
+      "lat": 24.4141,
+      "lon": 111.5521,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "451300",
+      "name": "来宾",
+      "province": "广西",
+      "lat": 23.7338,
+      "lon": 109.2298,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "450200",
+      "name": "柳州",
+      "province": "广西",
+      "lat": 24.3146,
+      "lon": 109.4117,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "450100",
+      "name": "南宁",
+      "province": "广西",
+      "lat": 22.824,
+      "lon": 108.32,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "450700",
+      "name": "钦州",
+      "province": "广西",
+      "lat": 21.9671,
+      "lon": 108.6242,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "450400",
+      "name": "梧州",
+      "province": "广西",
+      "lat": 23.4748,
+      "lon": 111.2976,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "450900",
+      "name": "玉林",
+      "province": "广西",
+      "lat": 22.6314,
+      "lon": 110.1544,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "520400",
+      "name": "安顺",
+      "province": "贵州",
+      "lat": 26.2455,
+      "lon": 105.9322,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "520500",
+      "name": "毕节",
+      "province": "贵州",
+      "lat": 27.3017,
+      "lon": 105.285,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "520100",
+      "name": "贵阳",
+      "province": "贵州",
+      "lat": 26.5783,
+      "lon": 106.7135,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "520200",
+      "name": "六盘水",
+      "province": "贵州",
+      "lat": 26.5846,
+      "lon": 104.8467,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "522600",
+      "name": "黔东南苗族侗族自治州",
+      "province": "贵州",
+      "lat": 26.5834,
+      "lon": 107.9775,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "522700",
+      "name": "黔南布依族苗族自治州",
+      "province": "贵州",
+      "lat": 26.2582,
+      "lon": 107.5172,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "522300",
+      "name": "黔西南布依族苗族自治州",
+      "province": "贵州",
+      "lat": 25.0881,
+      "lon": 104.898,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "520600",
+      "name": "铜仁",
+      "province": "贵州",
+      "lat": 27.7183,
+      "lon": 109.1916,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "520300",
+      "name": "遵义",
+      "province": "贵州",
+      "lat": 27.7066,
+      "lon": 106.9373,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "469025",
+      "name": "白沙黎族自治县",
+      "province": "海南",
+      "lat": 19.2246,
+      "lon": 109.4526,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "469029",
+      "name": "保亭黎族苗族自治县",
+      "province": "海南",
+      "lat": 18.6364,
+      "lon": 109.7025,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "469026",
+      "name": "昌江黎族自治县",
+      "province": "海南",
+      "lat": 19.261,
+      "lon": 109.0534,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "469023",
+      "name": "澄迈县",
+      "province": "海南",
+      "lat": 19.7371,
+      "lon": 110.0071,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "460400",
+      "name": "儋州",
+      "province": "海南",
+      "lat": 19.5175,
+      "lon": 109.5768,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "469021",
+      "name": "定安县",
+      "province": "海南",
+      "lat": 19.685,
+      "lon": 110.3492,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "469007",
+      "name": "东方",
+      "province": "海南",
+      "lat": 19.102,
+      "lon": 108.6538,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "460100",
+      "name": "海口",
+      "province": "海南",
+      "lat": 20.032,
+      "lon": 110.3312,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "469027",
+      "name": "乐东黎族自治县",
+      "province": "海南",
+      "lat": 18.7476,
+      "lon": 109.1754,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "469024",
+      "name": "临高县",
+      "province": "海南",
+      "lat": 19.9083,
+      "lon": 109.6877,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "469028",
+      "name": "陵水黎族自治县",
+      "province": "海南",
+      "lat": 18.505,
+      "lon": 110.0372,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "469002",
+      "name": "琼海",
+      "province": "海南",
+      "lat": 19.246,
+      "lon": 110.4668,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "469030",
+      "name": "琼中黎族苗族自治县",
+      "province": "海南",
+      "lat": 19.0356,
+      "lon": 109.84,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "460300",
+      "name": "三沙",
+      "province": "海南",
+      "lat": 16.831,
+      "lon": 112.3488,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "460200",
+      "name": "三亚",
+      "province": "海南",
+      "lat": 18.2479,
+      "lon": 109.5083,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "469022",
+      "name": "屯昌县",
+      "province": "海南",
+      "lat": 19.3629,
+      "lon": 110.1028,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "469006",
+      "name": "万宁",
+      "province": "海南",
+      "lat": 18.7962,
+      "lon": 110.3888,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "469005",
+      "name": "文昌",
+      "province": "海南",
+      "lat": 19.613,
+      "lon": 110.754,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "469001",
+      "name": "五指山",
+      "province": "海南",
+      "lat": 18.7769,
+      "lon": 109.5167,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "130600",
+      "name": "保定",
+      "province": "河北",
+      "lat": 38.8677,
+      "lon": 115.4823,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "130900",
+      "name": "沧州",
+      "province": "河北",
+      "lat": 38.3106,
+      "lon": 116.8575,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "130800",
+      "name": "承德",
+      "province": "河北",
+      "lat": 40.9762,
+      "lon": 117.9392,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "130400",
+      "name": "邯郸",
+      "province": "河北",
+      "lat": 36.6123,
+      "lon": 114.4907,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "131100",
+      "name": "衡水",
+      "province": "河北",
+      "lat": 37.7351,
+      "lon": 115.666,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "131000",
+      "name": "廊坊",
+      "province": "河北",
+      "lat": 39.5239,
+      "lon": 116.7044,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "130300",
+      "name": "秦皇岛",
+      "province": "河北",
+      "lat": 39.9425,
+      "lon": 119.5866,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "130100",
+      "name": "石家庄",
+      "province": "河北",
+      "lat": 38.0455,
+      "lon": 114.5025,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "130200",
+      "name": "唐山",
+      "province": "河北",
+      "lat": 39.6351,
+      "lon": 118.1754,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "130500",
+      "name": "邢台",
+      "province": "河北",
+      "lat": 37.0682,
+      "lon": 114.5089,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "130700",
+      "name": "张家口",
+      "province": "河北",
+      "lat": 40.8119,
+      "lon": 114.8841,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "410500",
+      "name": "安阳",
+      "province": "河南",
+      "lat": 36.1034,
+      "lon": 114.3525,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "410600",
+      "name": "鹤壁",
+      "province": "河南",
+      "lat": 35.7482,
+      "lon": 114.2954,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "419001",
+      "name": "济源",
+      "province": "河南",
+      "lat": 35.0904,
+      "lon": 112.59,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "410800",
+      "name": "焦作",
+      "province": "河南",
+      "lat": 35.239,
+      "lon": 113.2383,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "410200",
+      "name": "开封",
+      "province": "河南",
+      "lat": 34.797,
+      "lon": 114.3414,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "410300",
+      "name": "洛阳",
+      "province": "河南",
+      "lat": 34.663,
+      "lon": 112.4345,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "411100",
+      "name": "漯河",
+      "province": "河南",
+      "lat": 33.5759,
+      "lon": 114.0264,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "411300",
+      "name": "南阳",
+      "province": "河南",
+      "lat": 32.9991,
+      "lon": 112.5409,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "410400",
+      "name": "平顶山",
+      "province": "河南",
+      "lat": 33.7352,
+      "lon": 113.3077,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "410900",
+      "name": "濮阳",
+      "province": "河南",
+      "lat": 35.7682,
+      "lon": 115.0413,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "411200",
+      "name": "三门峡",
+      "province": "河南",
+      "lat": 34.7773,
+      "lon": 111.1941,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "411400",
+      "name": "商丘",
+      "province": "河南",
+      "lat": 34.4371,
+      "lon": 115.6505,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "410700",
+      "name": "新乡",
+      "province": "河南",
+      "lat": 35.3026,
+      "lon": 113.884,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "411500",
+      "name": "信阳",
+      "province": "河南",
+      "lat": 32.1233,
+      "lon": 114.075,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "411000",
+      "name": "许昌",
+      "province": "河南",
+      "lat": 34.023,
+      "lon": 113.8261,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "410100",
+      "name": "郑州",
+      "province": "河南",
+      "lat": 34.758,
+      "lon": 113.6654,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "411600",
+      "name": "周口",
+      "province": "河南",
+      "lat": 33.6204,
+      "lon": 114.6497,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "411700",
+      "name": "驻马店",
+      "province": "河南",
+      "lat": 32.9802,
+      "lon": 114.0247,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "230600",
+      "name": "大庆",
+      "province": "黑龙江",
+      "lat": 46.5907,
+      "lon": 125.1127,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "232700",
+      "name": "大兴安岭地区",
+      "province": "黑龙江",
+      "lat": 52.3353,
+      "lon": 124.7115,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "230100",
+      "name": "哈尔滨",
+      "province": "黑龙江",
+      "lat": 45.757,
+      "lon": 126.6425,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "230400",
+      "name": "鹤岗",
+      "province": "黑龙江",
+      "lat": 47.3321,
+      "lon": 130.2775,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "231100",
+      "name": "黑河",
+      "province": "黑龙江",
+      "lat": 50.2496,
+      "lon": 127.499,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "230300",
+      "name": "鸡西",
+      "province": "黑龙江",
+      "lat": 45.3,
+      "lon": 130.976,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "230800",
+      "name": "佳木斯",
+      "province": "黑龙江",
+      "lat": 46.8096,
+      "lon": 130.3616,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "231000",
+      "name": "牡丹江",
+      "province": "黑龙江",
+      "lat": 44.583,
+      "lon": 129.6186,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "230900",
+      "name": "七台河",
+      "province": "黑龙江",
+      "lat": 45.7713,
+      "lon": 131.0156,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "230200",
+      "name": "齐齐哈尔",
+      "province": "黑龙江",
+      "lat": 47.3421,
+      "lon": 123.9579,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "230500",
+      "name": "双鸭山",
+      "province": "黑龙江",
+      "lat": 46.6434,
+      "lon": 131.1573,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "231200",
+      "name": "绥化",
+      "province": "黑龙江",
+      "lat": 46.6374,
+      "lon": 126.9929,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "230700",
+      "name": "伊春",
+      "province": "黑龙江",
+      "lat": 47.7248,
+      "lon": 128.8994,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "420700",
+      "name": "鄂州",
+      "province": "湖北",
+      "lat": 30.3965,
+      "lon": 114.8906,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "422800",
+      "name": "恩施土家族苗族自治州",
+      "province": "湖北",
+      "lat": 30.2831,
+      "lon": 109.487,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "421100",
+      "name": "黄冈",
+      "province": "湖北",
+      "lat": 30.4477,
+      "lon": 114.8794,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "420200",
+      "name": "黄石",
+      "province": "湖北",
+      "lat": 30.2201,
+      "lon": 115.077,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "420800",
+      "name": "荆门",
+      "province": "湖北",
+      "lat": 31.0354,
+      "lon": 112.2043,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "421000",
+      "name": "荆州",
+      "province": "湖北",
+      "lat": 30.3269,
+      "lon": 112.2381,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "429005",
+      "name": "潜江",
+      "province": "湖北",
+      "lat": 30.4212,
+      "lon": 112.8969,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "429021",
+      "name": "神农架林区",
+      "province": "湖北",
+      "lat": 31.7444,
+      "lon": 110.6715,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "420300",
+      "name": "十堰",
+      "province": "湖北",
+      "lat": 32.6469,
+      "lon": 110.7879,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "421300",
+      "name": "随州",
+      "province": "湖北",
+      "lat": 31.7175,
+      "lon": 113.3738,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "429006",
+      "name": "天门",
+      "province": "湖北",
+      "lat": 30.6531,
+      "lon": 113.1659,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "420100",
+      "name": "武汉",
+      "province": "湖北",
+      "lat": 30.5844,
+      "lon": 114.2986,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "429004",
+      "name": "仙桃",
+      "province": "湖北",
+      "lat": 30.365,
+      "lon": 113.454,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "421200",
+      "name": "咸宁",
+      "province": "湖北",
+      "lat": 29.8328,
+      "lon": 114.329,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "420600",
+      "name": "襄阳",
+      "province": "湖北",
+      "lat": 32.0424,
+      "lon": 112.1441,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "420900",
+      "name": "孝感",
+      "province": "湖北",
+      "lat": 30.9264,
+      "lon": 113.9267,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "420500",
+      "name": "宜昌",
+      "province": "湖北",
+      "lat": 30.7026,
+      "lon": 111.2908,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "430700",
+      "name": "常德",
+      "province": "湖南",
+      "lat": 29.0402,
+      "lon": 111.6913,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "431000",
+      "name": "郴州",
+      "province": "湖南",
+      "lat": 25.7936,
+      "lon": 113.0321,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "430400",
+      "name": "衡阳",
+      "province": "湖南",
+      "lat": 26.9004,
+      "lon": 112.6077,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "431200",
+      "name": "怀化",
+      "province": "湖南",
+      "lat": 27.5501,
+      "lon": 109.9782,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "431300",
+      "name": "娄底",
+      "province": "湖南",
+      "lat": 27.7281,
+      "lon": 112.0085,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "430500",
+      "name": "邵阳",
+      "province": "湖南",
+      "lat": 27.2378,
+      "lon": 111.4692,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "430300",
+      "name": "湘潭",
+      "province": "湖南",
+      "lat": 27.8297,
+      "lon": 112.9441,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "433100",
+      "name": "湘西土家族苗族自治州",
+      "province": "湖南",
+      "lat": 28.3143,
+      "lon": 109.7397,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "430900",
+      "name": "益阳",
+      "province": "湖南",
+      "lat": 28.5701,
+      "lon": 112.355,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "431100",
+      "name": "永州",
+      "province": "湖南",
+      "lat": 26.4345,
+      "lon": 111.608,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "430600",
+      "name": "岳阳",
+      "province": "湖南",
+      "lat": 29.3703,
+      "lon": 113.1329,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "430800",
+      "name": "张家界",
+      "province": "湖南",
+      "lat": 29.1274,
+      "lon": 110.4799,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "430100",
+      "name": "长沙",
+      "province": "湖南",
+      "lat": 28.1941,
+      "lon": 112.9823,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "430200",
+      "name": "株洲",
+      "province": "湖南",
+      "lat": 27.8358,
+      "lon": 113.1517,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "220800",
+      "name": "白城",
+      "province": "吉林",
+      "lat": 45.619,
+      "lon": 122.8411,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "220600",
+      "name": "白山",
+      "province": "吉林",
+      "lat": 41.9425,
+      "lon": 126.4278,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "220200",
+      "name": "吉林",
+      "province": "吉林",
+      "lat": 43.8436,
+      "lon": 126.553,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "220400",
+      "name": "辽源",
+      "province": "吉林",
+      "lat": 42.9027,
+      "lon": 125.1453,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "220300",
+      "name": "四平",
+      "province": "吉林",
+      "lat": 43.1703,
+      "lon": 124.3708,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "220700",
+      "name": "松原",
+      "province": "吉林",
+      "lat": 45.1182,
+      "lon": 124.8236,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "220500",
+      "name": "通化",
+      "province": "吉林",
+      "lat": 41.7212,
+      "lon": 125.9365,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "222400",
+      "name": "延边朝鲜族自治州",
+      "province": "吉林",
+      "lat": 42.9048,
+      "lon": 129.5132,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "220100",
+      "name": "长春",
+      "province": "吉林",
+      "lat": 43.8868,
+      "lon": 125.3245,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "320400",
+      "name": "常州",
+      "province": "江苏",
+      "lat": 31.7728,
+      "lon": 119.947,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "320800",
+      "name": "淮安",
+      "province": "江苏",
+      "lat": 33.5975,
+      "lon": 119.0213,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "320700",
+      "name": "连云港",
+      "province": "江苏",
+      "lat": 34.6,
+      "lon": 119.1788,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "320100",
+      "name": "南京",
+      "province": "江苏",
+      "lat": 32.0415,
+      "lon": 118.7674,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "320600",
+      "name": "南通",
+      "province": "江苏",
+      "lat": 32.0162,
+      "lon": 120.8646,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "320500",
+      "name": "苏州",
+      "province": "江苏",
+      "lat": 31.2994,
+      "lon": 120.6196,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "321300",
+      "name": "宿迁",
+      "province": "江苏",
+      "lat": 33.963,
+      "lon": 118.2752,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "321200",
+      "name": "泰州",
+      "province": "江苏",
+      "lat": 32.4849,
+      "lon": 119.9152,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "320200",
+      "name": "无锡",
+      "province": "江苏",
+      "lat": 31.5747,
+      "lon": 120.3017,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "320300",
+      "name": "徐州",
+      "province": "江苏",
+      "lat": 34.2618,
+      "lon": 117.1848,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "320900",
+      "name": "盐城",
+      "province": "江苏",
+      "lat": 33.3776,
+      "lon": 120.14,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "321000",
+      "name": "扬州",
+      "province": "江苏",
+      "lat": 32.3932,
+      "lon": 119.421,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "321100",
+      "name": "镇江",
+      "province": "江苏",
+      "lat": 32.2044,
+      "lon": 119.4528,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "361000",
+      "name": "抚州",
+      "province": "江西",
+      "lat": 27.9839,
+      "lon": 116.3584,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "360700",
+      "name": "赣州",
+      "province": "江西",
+      "lat": 25.851,
+      "lon": 114.9403,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "360800",
+      "name": "吉安",
+      "province": "江西",
+      "lat": 27.1117,
+      "lon": 114.9864,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "360200",
+      "name": "景德镇",
+      "province": "江西",
+      "lat": 29.2926,
+      "lon": 117.2147,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "360400",
+      "name": "九江",
+      "province": "江西",
+      "lat": 29.712,
+      "lon": 115.9928,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "360100",
+      "name": "南昌",
+      "province": "江西",
+      "lat": 28.6765,
+      "lon": 115.8922,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "360300",
+      "name": "萍乡",
+      "province": "江西",
+      "lat": 27.6229,
+      "lon": 113.8522,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "361100",
+      "name": "上饶",
+      "province": "江西",
+      "lat": 28.4444,
+      "lon": 117.9712,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "360500",
+      "name": "新余",
+      "province": "江西",
+      "lat": 27.8108,
+      "lon": 114.9308,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "360900",
+      "name": "宜春",
+      "province": "江西",
+      "lat": 27.8043,
+      "lon": 114.3911,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "360600",
+      "name": "鹰潭",
+      "province": "江西",
+      "lat": 28.2386,
+      "lon": 117.0338,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "210300",
+      "name": "鞍山",
+      "province": "辽宁",
+      "lat": 41.1106,
+      "lon": 122.9956,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "210500",
+      "name": "本溪",
+      "province": "辽宁",
+      "lat": 41.2979,
+      "lon": 123.7705,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "211300",
+      "name": "朝阳",
+      "province": "辽宁",
+      "lat": 41.5768,
+      "lon": 120.4512,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "210200",
+      "name": "大连",
+      "province": "辽宁",
+      "lat": 38.9146,
+      "lon": 121.6186,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "210600",
+      "name": "丹东",
+      "province": "辽宁",
+      "lat": 40.1243,
+      "lon": 124.383,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "210400",
+      "name": "抚顺",
+      "province": "辽宁",
+      "lat": 41.876,
+      "lon": 123.9211,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "210900",
+      "name": "阜新",
+      "province": "辽宁",
+      "lat": 42.0118,
+      "lon": 121.649,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "211400",
+      "name": "葫芦岛",
+      "province": "辽宁",
+      "lat": 40.7556,
+      "lon": 120.8564,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "210700",
+      "name": "锦州",
+      "province": "辽宁",
+      "lat": 41.1193,
+      "lon": 121.1357,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "211000",
+      "name": "辽阳",
+      "province": "辽宁",
+      "lat": 41.2694,
+      "lon": 123.1815,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "211100",
+      "name": "盘锦",
+      "province": "辽宁",
+      "lat": 41.1245,
+      "lon": 122.0696,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "210100",
+      "name": "沈阳",
+      "province": "辽宁",
+      "lat": 41.7968,
+      "lon": 123.4291,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "211200",
+      "name": "铁岭",
+      "province": "辽宁",
+      "lat": 42.2906,
+      "lon": 123.8443,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "210800",
+      "name": "营口",
+      "province": "辽宁",
+      "lat": 40.6674,
+      "lon": 122.2352,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "152900",
+      "name": "阿拉善盟",
+      "province": "内蒙古",
+      "lat": 38.8448,
+      "lon": 105.7064,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "150800",
+      "name": "巴彦淖尔",
+      "province": "内蒙古",
+      "lat": 40.7574,
+      "lon": 107.417,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "150200",
+      "name": "包头",
+      "province": "内蒙古",
+      "lat": 40.6582,
+      "lon": 109.8404,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "150400",
+      "name": "赤峰",
+      "province": "内蒙古",
+      "lat": 42.2753,
+      "lon": 118.9568,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "150600",
+      "name": "鄂尔多斯",
+      "province": "内蒙古",
+      "lat": 39.8172,
+      "lon": 109.9903,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "150100",
+      "name": "呼和浩特",
+      "province": "内蒙古",
+      "lat": 40.8183,
+      "lon": 111.6708,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "150700",
+      "name": "呼伦贝尔",
+      "province": "内蒙古",
+      "lat": 49.2153,
+      "lon": 119.7582,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "150500",
+      "name": "通辽",
+      "province": "内蒙古",
+      "lat": 43.6174,
+      "lon": 122.2631,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "150300",
+      "name": "乌海",
+      "province": "内蒙古",
+      "lat": 39.6737,
+      "lon": 106.8256,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "150900",
+      "name": "乌兰察布",
+      "province": "内蒙古",
+      "lat": 41.0341,
+      "lon": 113.1145,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "152500",
+      "name": "锡林郭勒盟",
+      "province": "内蒙古",
+      "lat": 43.944,
+      "lon": 116.091,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "152200",
+      "name": "兴安盟",
+      "province": "内蒙古",
+      "lat": 46.0763,
+      "lon": 122.0703,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "640400",
+      "name": "固原",
+      "province": "宁夏",
+      "lat": 36.0046,
+      "lon": 106.2852,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "640200",
+      "name": "石嘴山",
+      "province": "宁夏",
+      "lat": 39.0133,
+      "lon": 106.3762,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "640300",
+      "name": "吴忠",
+      "province": "宁夏",
+      "lat": 37.9862,
+      "lon": 106.1994,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "640100",
+      "name": "银川",
+      "province": "宁夏",
+      "lat": 38.4664,
+      "lon": 106.2782,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "640500",
+      "name": "中卫",
+      "province": "宁夏",
+      "lat": 37.515,
+      "lon": 105.1896,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "632600",
+      "name": "果洛藏族自治州",
+      "province": "青海",
+      "lat": 34.4736,
+      "lon": 100.2421,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "632200",
+      "name": "海北藏族自治州",
+      "province": "青海",
+      "lat": 36.9594,
+      "lon": 100.9011,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "630200",
+      "name": "海东",
+      "province": "青海",
+      "lat": 36.5029,
+      "lon": 102.1033,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "632500",
+      "name": "海南藏族自治州",
+      "province": "青海",
+      "lat": 36.2804,
+      "lon": 100.6195,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "632800",
+      "name": "海西蒙古族藏族自治州",
+      "province": "青海",
+      "lat": 37.3747,
+      "lon": 97.3708,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "632300",
+      "name": "黄南藏族自治州",
+      "province": "青海",
+      "lat": 35.5177,
+      "lon": 102.02,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "630100",
+      "name": "西宁",
+      "province": "青海",
+      "lat": 36.6232,
+      "lon": 101.7789,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "632700",
+      "name": "玉树藏族自治州",
+      "province": "青海",
+      "lat": 33.004,
+      "lon": 97.0085,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "371600",
+      "name": "滨州",
+      "province": "山东",
+      "lat": 37.3835,
+      "lon": 118.017,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "371400",
+      "name": "德州",
+      "province": "山东",
+      "lat": 37.454,
+      "lon": 116.3074,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "370500",
+      "name": "东营",
+      "province": "山东",
+      "lat": 37.4346,
+      "lon": 118.6647,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "371700",
+      "name": "菏泽",
+      "province": "山东",
+      "lat": 35.2465,
+      "lon": 115.4694,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "370100",
+      "name": "济南",
+      "province": "山东",
+      "lat": 36.6758,
+      "lon": 117.0009,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "370800",
+      "name": "济宁",
+      "province": "山东",
+      "lat": 35.4154,
+      "lon": 116.5872,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "371500",
+      "name": "聊城",
+      "province": "山东",
+      "lat": 36.456,
+      "lon": 115.9804,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "371300",
+      "name": "临沂",
+      "province": "山东",
+      "lat": 35.0653,
+      "lon": 118.3264,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "370200",
+      "name": "青岛",
+      "province": "山东",
+      "lat": 36.083,
+      "lon": 120.3552,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "371100",
+      "name": "日照",
+      "province": "山东",
+      "lat": 35.4286,
+      "lon": 119.4612,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "370900",
+      "name": "泰安",
+      "province": "山东",
+      "lat": 36.195,
+      "lon": 117.1291,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "371000",
+      "name": "威海",
+      "province": "山东",
+      "lat": 37.5097,
+      "lon": 122.1164,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "370700",
+      "name": "潍坊",
+      "province": "山东",
+      "lat": 36.7093,
+      "lon": 119.1071,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "370600",
+      "name": "烟台",
+      "province": "山东",
+      "lat": 37.5393,
+      "lon": 121.3914,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "370400",
+      "name": "枣庄",
+      "province": "山东",
+      "lat": 34.8564,
+      "lon": 117.558,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "370300",
+      "name": "淄博",
+      "province": "山东",
+      "lat": 36.8149,
+      "lon": 118.0476,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "140200",
+      "name": "大同",
+      "province": "山西",
+      "lat": 40.0903,
+      "lon": 113.2953,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "140500",
+      "name": "晋城",
+      "province": "山西",
+      "lat": 35.4976,
+      "lon": 112.8513,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "140700",
+      "name": "晋中",
+      "province": "山西",
+      "lat": 37.6965,
+      "lon": 112.7365,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "141000",
+      "name": "临汾",
+      "province": "山西",
+      "lat": 36.0842,
+      "lon": 111.518,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "141100",
+      "name": "吕梁",
+      "province": "山西",
+      "lat": 37.5244,
+      "lon": 111.1343,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "140600",
+      "name": "朔州",
+      "province": "山西",
+      "lat": 39.3313,
+      "lon": 112.4334,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "140100",
+      "name": "太原",
+      "province": "山西",
+      "lat": 37.857,
+      "lon": 112.5492,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "140900",
+      "name": "忻州",
+      "province": "山西",
+      "lat": 38.4177,
+      "lon": 112.7335,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "140300",
+      "name": "阳泉",
+      "province": "山西",
+      "lat": 37.8612,
+      "lon": 113.5833,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "140800",
+      "name": "运城",
+      "province": "山西",
+      "lat": 35.0228,
+      "lon": 111.004,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "140400",
+      "name": "长治",
+      "province": "山西",
+      "lat": 36.1911,
+      "lon": 113.1136,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "610900",
+      "name": "安康",
+      "province": "陕西",
+      "lat": 32.6903,
+      "lon": 109.0293,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "610300",
+      "name": "宝鸡",
+      "province": "陕西",
+      "lat": 34.3693,
+      "lon": 107.1449,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "610700",
+      "name": "汉中",
+      "province": "陕西",
+      "lat": 33.0777,
+      "lon": 107.0286,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "611000",
+      "name": "商洛",
+      "province": "陕西",
+      "lat": 33.8683,
+      "lon": 109.9398,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "610200",
+      "name": "铜川",
+      "province": "陕西",
+      "lat": 34.9166,
+      "lon": 108.9796,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "610500",
+      "name": "渭南",
+      "province": "陕西",
+      "lat": 34.4994,
+      "lon": 109.5029,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "610100",
+      "name": "西安",
+      "province": "陕西",
+      "lat": 34.2632,
+      "lon": 108.948,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "610400",
+      "name": "咸阳",
+      "province": "陕西",
+      "lat": 34.3334,
+      "lon": 108.7051,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "610600",
+      "name": "延安",
+      "province": "陕西",
+      "lat": 36.5965,
+      "lon": 109.4908,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "610800",
+      "name": "榆林",
+      "province": "陕西",
+      "lat": 38.2902,
+      "lon": 109.7412,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "310000",
+      "name": "上海",
+      "province": "上海",
+      "lat": 31.2317,
+      "lon": 121.4726,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "513200",
+      "name": "阿坝藏族羌族自治州",
+      "province": "四川",
+      "lat": 31.8998,
+      "lon": 102.2214,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "511900",
+      "name": "巴中",
+      "province": "四川",
+      "lat": 31.8588,
+      "lon": 106.7537,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "510100",
+      "name": "成都",
+      "province": "四川",
+      "lat": 30.6595,
+      "lon": 104.0657,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "511700",
+      "name": "达州",
+      "province": "四川",
+      "lat": 31.2095,
+      "lon": 107.5023,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "510600",
+      "name": "德阳",
+      "province": "四川",
+      "lat": 31.128,
+      "lon": 104.3987,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "513300",
+      "name": "甘孜藏族自治州",
+      "province": "四川",
+      "lat": 30.0507,
+      "lon": 101.9638,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "511600",
+      "name": "广安",
+      "province": "四川",
+      "lat": 30.4564,
+      "lon": 106.6334,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "510800",
+      "name": "广元",
+      "province": "四川",
+      "lat": 32.4337,
+      "lon": 105.8298,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "511100",
+      "name": "乐山",
+      "province": "四川",
+      "lat": 29.582,
+      "lon": 103.7613,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "513400",
+      "name": "凉山彝族自治州",
+      "province": "四川",
+      "lat": 27.8868,
+      "lon": 102.2587,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "510500",
+      "name": "泸州",
+      "province": "四川",
+      "lat": 28.8891,
+      "lon": 105.4433,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "511400",
+      "name": "眉山",
+      "province": "四川",
+      "lat": 30.0483,
+      "lon": 103.8318,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "510700",
+      "name": "绵阳",
+      "province": "四川",
+      "lat": 31.464,
+      "lon": 104.7417,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "511300",
+      "name": "南充",
+      "province": "四川",
+      "lat": 30.7953,
+      "lon": 106.083,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "511000",
+      "name": "内江",
+      "province": "四川",
+      "lat": 29.5871,
+      "lon": 105.0661,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "510400",
+      "name": "攀枝花",
+      "province": "四川",
+      "lat": 26.5804,
+      "lon": 101.716,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "510900",
+      "name": "遂宁",
+      "province": "四川",
+      "lat": 30.5133,
+      "lon": 105.5713,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "511800",
+      "name": "雅安",
+      "province": "四川",
+      "lat": 29.9877,
+      "lon": 103.001,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "511500",
+      "name": "宜宾",
+      "province": "四川",
+      "lat": 28.7602,
+      "lon": 104.6308,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "512000",
+      "name": "资阳",
+      "province": "四川",
+      "lat": 30.1222,
+      "lon": 104.6419,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "510300",
+      "name": "自贡",
+      "province": "四川",
+      "lat": 29.3528,
+      "lon": 104.7734,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "710000",
+      "name": "台湾",
+      "province": "台湾",
+      "lat": 25.0443,
+      "lon": 121.5091,
+      "timezone": "Asia/Taipei"
+    },
+    {
+      "id": "120000",
+      "name": "天津",
+      "province": "天津",
+      "lat": 39.1256,
+      "lon": 117.1902,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "542500",
+      "name": "阿里地区",
+      "province": "西藏",
+      "lat": 32.5032,
+      "lon": 80.1055,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "540300",
+      "name": "昌都",
+      "province": "西藏",
+      "lat": 31.1369,
+      "lon": 97.1785,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "540100",
+      "name": "拉萨",
+      "province": "西藏",
+      "lat": 29.6604,
+      "lon": 91.1322,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "540400",
+      "name": "林芝",
+      "province": "西藏",
+      "lat": 29.6547,
+      "lon": 94.3623,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "540600",
+      "name": "那曲",
+      "province": "西藏",
+      "lat": 31.476,
+      "lon": 92.0602,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "540200",
+      "name": "日喀则",
+      "province": "西藏",
+      "lat": 29.2675,
+      "lon": 88.8851,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "540500",
+      "name": "山南",
+      "province": "西藏",
+      "lat": 29.236,
+      "lon": 91.7665,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "810000",
+      "name": "香港",
+      "province": "香港",
+      "lat": 22.32,
+      "lon": 114.1734,
+      "timezone": "Asia/Hong_Kong"
+    },
+    {
+      "id": "652900",
+      "name": "阿克苏地区",
+      "province": "新疆",
+      "lat": 41.1707,
+      "lon": 80.2651,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "659002",
+      "name": "阿拉尔",
+      "province": "新疆",
+      "lat": 40.5419,
+      "lon": 81.2859,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "654300",
+      "name": "阿勒泰地区",
+      "province": "新疆",
+      "lat": 47.8484,
+      "lon": 88.1396,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "652800",
+      "name": "巴音郭楞蒙古自治州",
+      "province": "新疆",
+      "lat": 41.7686,
+      "lon": 86.151,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "659005",
+      "name": "北屯",
+      "province": "新疆",
+      "lat": 47.3532,
+      "lon": 87.8249,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "652700",
+      "name": "博尔塔拉蒙古自治州",
+      "province": "新疆",
+      "lat": 44.9033,
+      "lon": 82.0748,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "652300",
+      "name": "昌吉回族自治州",
+      "province": "新疆",
+      "lat": 44.0146,
+      "lon": 87.304,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "650500",
+      "name": "哈密",
+      "province": "新疆",
+      "lat": 42.8332,
+      "lon": 93.5132,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "653200",
+      "name": "和田地区",
+      "province": "新疆",
+      "lat": 37.1107,
+      "lon": 79.9253,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "659010",
+      "name": "胡杨河",
+      "province": "新疆",
+      "lat": 44.6929,
+      "lon": 84.8276,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "653100",
+      "name": "喀什地区",
+      "province": "新疆",
+      "lat": 39.4677,
+      "lon": 75.9891,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "659008",
+      "name": "可克达拉",
+      "province": "新疆",
+      "lat": 43.6832,
+      "lon": 80.6358,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "650200",
+      "name": "克拉玛依",
+      "province": "新疆",
+      "lat": 45.5959,
+      "lon": 84.8739,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "653000",
+      "name": "克孜勒苏柯尔克孜自治州",
+      "province": "新疆",
+      "lat": 39.7134,
+      "lon": 76.1728,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "659009",
+      "name": "昆玉",
+      "province": "新疆",
+      "lat": 37.208,
+      "lon": 79.2874,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "659001",
+      "name": "石河子",
+      "province": "新疆",
+      "lat": 44.3059,
+      "lon": 86.0411,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "659007",
+      "name": "双河",
+      "province": "新疆",
+      "lat": 44.8405,
+      "lon": 82.3537,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "654200",
+      "name": "塔城地区",
+      "province": "新疆",
+      "lat": 46.7463,
+      "lon": 82.9857,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "659006",
+      "name": "铁门关",
+      "province": "新疆",
+      "lat": 41.8273,
+      "lon": 85.5012,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "659003",
+      "name": "图木舒克",
+      "province": "新疆",
+      "lat": 39.8673,
+      "lon": 79.078,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "650400",
+      "name": "吐鲁番",
+      "province": "新疆",
+      "lat": 42.9476,
+      "lon": 89.1841,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "650100",
+      "name": "乌鲁木齐",
+      "province": "新疆",
+      "lat": 43.7928,
+      "lon": 87.6177,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "659004",
+      "name": "五家渠",
+      "province": "新疆",
+      "lat": 44.1674,
+      "lon": 87.5269,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "654000",
+      "name": "伊犁哈萨克自治州",
+      "province": "新疆",
+      "lat": 43.9219,
+      "lon": 81.3179,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "530500",
+      "name": "保山",
+      "province": "云南",
+      "lat": 25.1118,
+      "lon": 99.1671,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "532300",
+      "name": "楚雄彝族自治州",
+      "province": "云南",
+      "lat": 25.042,
+      "lon": 101.546,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "532900",
+      "name": "大理白族自治州",
+      "province": "云南",
+      "lat": 25.5894,
+      "lon": 100.2257,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "533100",
+      "name": "德宏傣族景颇族自治州",
+      "province": "云南",
+      "lat": 24.4367,
+      "lon": 98.5784,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "533400",
+      "name": "迪庆藏族自治州",
+      "province": "云南",
+      "lat": 27.8269,
+      "lon": 99.7065,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "532500",
+      "name": "红河哈尼族彝族自治州",
+      "province": "云南",
+      "lat": 23.3668,
+      "lon": 103.3842,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "530100",
+      "name": "昆明",
+      "province": "云南",
+      "lat": 25.0406,
+      "lon": 102.7123,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "530700",
+      "name": "丽江",
+      "province": "云南",
+      "lat": 26.8721,
+      "lon": 100.233,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "530900",
+      "name": "临沧",
+      "province": "云南",
+      "lat": 23.8866,
+      "lon": 100.087,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "533300",
+      "name": "怒江傈僳族自治州",
+      "province": "云南",
+      "lat": 25.8509,
+      "lon": 98.8543,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "530800",
+      "name": "普洱",
+      "province": "云南",
+      "lat": 22.7773,
+      "lon": 100.9723,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "530300",
+      "name": "曲靖",
+      "province": "云南",
+      "lat": 25.5016,
+      "lon": 103.7979,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "532600",
+      "name": "文山壮族苗族自治州",
+      "province": "云南",
+      "lat": 23.3695,
+      "lon": 104.244,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "532800",
+      "name": "西双版纳傣族自治州",
+      "province": "云南",
+      "lat": 22.0017,
+      "lon": 100.7979,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "530400",
+      "name": "玉溪",
+      "province": "云南",
+      "lat": 24.3505,
+      "lon": 102.5439,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "530600",
+      "name": "昭通",
+      "province": "云南",
+      "lat": 27.337,
+      "lon": 103.7172,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "330100",
+      "name": "杭州",
+      "province": "浙江",
+      "lat": 30.2875,
+      "lon": 120.1536,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "330500",
+      "name": "湖州",
+      "province": "浙江",
+      "lat": 30.8672,
+      "lon": 120.1024,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "330400",
+      "name": "嘉兴",
+      "province": "浙江",
+      "lat": 30.7627,
+      "lon": 120.7509,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "330700",
+      "name": "金华",
+      "province": "浙江",
+      "lat": 29.0895,
+      "lon": 119.6495,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "331100",
+      "name": "丽水",
+      "province": "浙江",
+      "lat": 28.452,
+      "lon": 119.9218,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "330200",
+      "name": "宁波",
+      "province": "浙江",
+      "lat": 29.8684,
+      "lon": 121.5498,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "330800",
+      "name": "衢州",
+      "province": "浙江",
+      "lat": 28.9417,
+      "lon": 118.8726,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "330600",
+      "name": "绍兴",
+      "province": "浙江",
+      "lat": 29.9971,
+      "lon": 120.5821,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "331000",
+      "name": "台州",
+      "province": "浙江",
+      "lat": 28.6614,
+      "lon": 121.4286,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "330300",
+      "name": "温州",
+      "province": "浙江",
+      "lat": 28.0006,
+      "lon": 120.6721,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "id": "330900",
+      "name": "舟山",
+      "province": "浙江",
+      "lat": 30.016,
+      "lon": 122.1069,
       "timezone": "Asia/Shanghai"
     }
   ]

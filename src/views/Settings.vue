@@ -5,9 +5,11 @@
  * 设置只写 KEYS.SETTINGS 一个键，存 { cityId, indoorTemp, feedbackOffset }。
  * 阈值与文案尽量从配置取，页面上不出现“凭印象写的数字”。
  */
-import { computed, inject, onBeforeUnmount, ref } from 'vue'
+import { computed, inject, nextTick, onBeforeUnmount, onMounted, ref } from 'vue'
 import FormField from '@/components/FormField.vue'
 import storage, { get, set, KEYS } from '@/services/storage.js'
+import { locate } from '@/services/location.js'
+import { describeDistance, findNearestCity } from '@/core/utils/geo.js'
 
 const config = inject('config', {})
 
@@ -17,11 +19,19 @@ const damp = computed(() => config.indices?.damp?.thresholds || {})
 const lookbackHours = computed(() => damp.value.indoorTempLookbackHours || 72)
 const indoorDefault = computed(() => damp.value.indoorTempDefault ?? 22)
 
-/** 城市列表：createConfig 只保留 cities 数组（丢弃了 cities.json 的 default 字段），默认取列表首个 */
+/**
+ * 城市列表：全国 370 个，按省份排序。
+ * 注意默认城市要取 cities.json 里的 default 字段，不能取列表第一个——
+ * 排序后第一个是「安庆」，不是深圳。
+ */
 const cities = computed(() => config.cities || [])
-const defaultCityId = computed(() => cities.value[0]?.id || '')
-const defaultCityName = computed(() => cities.value[0]?.name || '—')
-const cityHint = computed(() => `用于天气取数与穿衣、晾晒结论；默认${defaultCityName.value}`)
+const defaultCityId = computed(() => config.defaultCityId || cities.value[0]?.id || '')
+const defaultCity = computed(
+  () => cities.value.find((city) => city.id === defaultCityId.value) || cities.value[0] || null,
+)
+const cityHint = computed(() =>
+  `用于天气取数与穿衣、晾晒结论；共 ${cities.value.length} 个城市可选，默认${defaultCity.value?.name || '—'}`,
+)
 
 /* ---------- 输入范围（界面约束，不是业务阈值） ---------- */
 
@@ -41,6 +51,130 @@ const savedCityId = cities.value.some((city) => city.id === saved.cityId) ? save
 const cityId = ref(savedCityId)
 const indoorTemp = ref(saved.indoorTemp ?? indoorDefault.value)
 const feedbackOffset = ref(saved.feedbackOffset ?? 0)
+
+/* ---------- 城市选择与定位 ---------- */
+
+/**
+ * 城市选择改成「搜索 + 分组点选」，不用原生下拉：
+ * 370 个城市塞进 <select> 里滚动找是很折磨人的，手机上下拉更是灾难。
+ *
+ * 搜索只匹配汉字与省份名，不做拼音首字母——拼音需要额外的拼音数据，
+ * 而中文输入法打「sz」也是先上屏「深圳」再选中，汉字匹配已经够用，
+ * 没必要为此让 cities.json 多带一份拼音字段。
+ */
+const keyword = ref('')
+
+const currentCity = computed(
+  () => cities.value.find((city) => city.id === cityId.value) || defaultCity.value,
+)
+
+const filteredCities = computed(() => {
+  const kw = keyword.value.trim()
+  if (!kw) return cities.value
+  return cities.value.filter((city) => city.name.includes(kw) || city.province.includes(kw))
+})
+
+/** 按省分组，未搜索时保持省份顺序；搜索结果少于一屏时不显示分组标题 */
+const cityGroups = computed(() => {
+  const groups = []
+  let lastProvince = null
+  for (const city of filteredCities.value) {
+    if (city.province !== lastProvince) {
+      groups.push({ province: city.province, cities: [] })
+      lastProvince = city.province
+    }
+    groups[groups.length - 1].cities.push(city)
+  }
+  return groups
+})
+
+const showGroupTitles = computed(() => !keyword.value.trim() && cityGroups.value.length > 1)
+
+const cityState = ref('') // '' | 'saved' | 'memory'
+
+/**
+ * 选中即保存：城市是独立设置项，用户点完城市还要滚到下面找「保存设置」会莫名其妙。
+ * 只覆盖 cityId，室内温度与偏移沿用已存的值，避免把输入框里未提交的内容顺带写进去。
+ */
+function applyCity(id, options = {}) {
+  cityId.value = id
+  const current = get(KEYS.SETTINGS, {}) || {}
+  const ok = set(KEYS.SETTINGS, {
+    ...current,
+    cityId: id,
+    indoorTemp: Number.isFinite(current.indoorTemp) ? current.indoorTemp : indoorDefault.value,
+    feedbackOffset: Number.isFinite(current.feedbackOffset) ? current.feedbackOffset : 0,
+  })
+  cityState.value = ok ? 'saved' : 'memory'
+  keys.value = storage.listKeys()
+  if (timer) clearTimeout(timer)
+  timer = setTimeout(() => {
+    cityState.value = ''
+  }, 2400)
+  // 定位是「用户不知道会选到哪个」，得把它滚出来；手动点选本来就在眼前，滚了反而跳
+  if (options.reveal) nextTick(scrollActiveIntoView)
+}
+
+const locating = ref(false)
+const locateState = ref(null) // {kind: 'ok'|'error', text}
+
+const listRef = ref(null)
+
+/**
+ * 打开页面时把已选城市滚到列表中间。
+ * 不做这件事的话，列表按省份排、默认从「安徽」开头，
+ * 而默认城市深圳在「广东」那一段，用户一进来根本看不到自己选的是哪个。
+ */
+function scrollActiveIntoView() {
+  const container = listRef.value
+  if (!container) return
+  const active = container.querySelector('.city-chip-active')
+  if (!active) return
+  const box = container.getBoundingClientRect()
+  const chip = active.getBoundingClientRect()
+  container.scrollTop += chip.top - box.top - (box.height - chip.height) / 2
+}
+
+/** 把定位失败的原因翻译成用户能照着做的下一步，而不是「定位失败」四个字 */
+const LOCATE_REASON = {
+  denied: '你拒绝了定位授权。可以在浏览器地址栏左侧的站点图标里重新允许，或直接手动选城市。',
+  insecure: '当前页面不是 HTTPS，浏览器不允许定位。请手动选择城市。',
+  unavailable: '系统没有提供位置信息，请检查手机或电脑的定位服务是否开启，或手动选择城市。',
+  timeout: '定位超时。可以再试一次，或直接手动选择城市。',
+  unsupported: '当前浏览器不支持定位，请手动选择城市。',
+}
+
+async function useMyLocation() {
+  locating.value = true
+  locateState.value = null
+  try {
+    const position = await locate()
+    if (!position.ok) {
+      locateState.value = {
+        kind: 'error',
+        text: LOCATE_REASON[position.reason] || `定位失败：${position.message || position.reason}`,
+      }
+      return
+    }
+
+    const nearest = findNearestCity(cities.value, position.latitude, position.longitude)
+    if (!nearest) {
+      locateState.value = { kind: 'error', text: '定位到了坐标，但城市表里没有可匹配的城市，请手动选择。' }
+      return
+    }
+
+    applyCity(nearest.city.id, { reveal: true })
+    const accuracyNote = position.accuracy && position.accuracy > 5000
+      ? '，设备给的定位精度较低'
+      : ''
+    locateState.value = {
+      kind: 'ok',
+      text: `已按位置匹配到「${nearest.city.name}」（${describeDistance(nearest.distanceKm)}${accuracyNote}）。不准确的话在下面手动选。`,
+    }
+  } finally {
+    locating.value = false
+  }
+}
 
 const tempError = computed(() => {
   const value = indoorTemp.value
@@ -153,6 +287,10 @@ const checklistsMeta = computed(() => config.checklistsMeta || {})
 onBeforeUnmount(() => {
   if (timer) clearTimeout(timer)
 })
+
+onMounted(() => {
+  nextTick(scrollActiveIntoView)
+})
 </script>
 
 <template>
@@ -165,16 +303,59 @@ onBeforeUnmount(() => {
     <!-- 城市 -->
     <section class="card stack-sm">
       <h2 class="section-title section-flush">常用城市</h2>
-      <FormField label="城市" :hint="cityHint">
-        <template #default="{ id }">
-          <select :id="id" v-model="cityId">
-            <option v-for="city in cities" :key="city.id" :value="city.id">
-              {{ city.name }}（{{ city.province }}）
-            </option>
-          </select>
-        </template>
-      </FormField>
+
+      <div class="city-current">
+        <div class="city-current-main">
+          <span class="city-current-name">{{ currentCity?.name || '—' }}</span>
+          <span class="faint tiny">{{ currentCity?.province }}</span>
+        </div>
+        <button type="button" class="btn btn-sm" :disabled="locating" @click="useMyLocation">
+          {{ locating ? '定位中…' : '使用当前位置' }}
+        </button>
+      </div>
+
+      <p v-if="locateState" class="locate-note" :class="`locate-${locateState.kind}`" role="status">
+        {{ locateState.text }}
+      </p>
+
+      <div class="field">
+        <label class="field-label" for="city-search">选择城市</label>
+        <input
+          id="city-search"
+          v-model="keyword"
+          type="search"
+          autocomplete="off"
+          placeholder="输入城市或省份，如「深圳」「广东」"
+        />
+        <p class="field-hint">{{ cityHint }}</p>
+      </div>
+
       <p v-if="!cities.length" class="field-error">城市配置未加载，请检查 cities.json。</p>
+      <template v-else>
+        <div v-if="filteredCities.length" ref="listRef" class="city-list">
+          <div v-for="group in cityGroups" :key="group.province" class="city-group">
+            <p v-if="showGroupTitles" class="city-group-name">{{ group.province }}</p>
+            <div class="city-chips">
+              <button
+                v-for="city in group.cities"
+                :key="city.id"
+                type="button"
+                class="city-chip"
+                :class="{ 'city-chip-active': city.id === cityId }"
+                :aria-pressed="city.id === cityId"
+                @click="applyCity(city.id)"
+              >
+                {{ city.name }}
+              </button>
+            </div>
+          </div>
+        </div>
+        <p v-else class="field-error">没有匹配的城市，换个关键词试试。</p>
+      </template>
+
+      <p v-if="cityState" class="faint tiny" role="status">
+        {{ cityState === 'saved' ? '城市已保存，回到首页即可看到该城市的结论。' : '已应用，但当前为隐私模式，本次不会保存。' }}
+      </p>
     </section>
 
     <!-- 室内温度与体感偏移 -->
@@ -333,6 +514,136 @@ onBeforeUnmount(() => {
 <style scoped>
 .section-flush {
   margin: 0;
+}
+
+/* ---------- 城市选择 ---------- */
+
+.city-current {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--line);
+  background: var(--surface-2);
+}
+
+.city-current-main {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  min-width: 0;
+  flex: 1;
+}
+
+.city-current-name {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.city-current .btn {
+  flex: none;
+}
+
+.locate-note {
+  font-size: 12.5px;
+  line-height: 1.55;
+  padding: 8px 10px;
+  border-radius: 8px;
+  border: 1px solid transparent;
+}
+
+.locate-ok {
+  color: var(--lv4);
+  background: var(--lv4-weak);
+  border-color: var(--lv4-weak);
+}
+
+.locate-error {
+  color: var(--lv1);
+  background: var(--lv1-weak);
+  border-color: var(--lv1-weak);
+}
+
+/* 370 个城市不能撑满整页，给固定高度自己滚；
+   底部内阴影是「下面还有内容」的提示，否则看着像列表被切断 */
+.city-list {
+  max-height: 300px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 4px 2px 8px;
+  border-radius: var(--radius-sm);
+  box-shadow: inset 0 -16px 16px -16px rgba(23, 25, 28, 0.22);
+}
+
+.city-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.city-group-name {
+  font-size: 12px;
+  color: var(--text-3);
+  margin: 0;
+  position: sticky;
+  top: 0;
+  background: var(--surface);
+  padding: 2px 0;
+  z-index: 1;
+}
+
+.city-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.city-chip {
+  font-size: 13px;
+  line-height: 1;
+  padding: 7px 11px;
+  border-radius: 999px;
+  border: 1px solid var(--line-strong);
+  background: var(--surface);
+  color: var(--text-2);
+  cursor: pointer;
+  transition: border-color 0.15s ease, background 0.15s ease, color 0.15s ease;
+}
+
+.city-chip:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.city-chip:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px var(--accent-weak);
+}
+
+.city-chip-active {
+  border-color: var(--accent);
+  background: var(--accent-weak);
+  color: var(--accent-dark);
+  font-weight: 600;
+}
+
+@media (max-width: 430px) {
+  .city-current {
+    flex-wrap: wrap;
+  }
+
+  .city-current .btn {
+    width: 100%;
+  }
+
+  .city-list {
+    max-height: 260px;
+  }
 }
 
 .offset-row {
