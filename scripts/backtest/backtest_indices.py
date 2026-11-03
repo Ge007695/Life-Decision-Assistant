@@ -165,14 +165,18 @@ def load_drying_config() -> dict:
 # ------------------------------------------------------------------ 构造入参
 
 
-def precip_prob_proxy(hour_precip: float, day_total: float) -> int:
+def precip_prob_proxy(hour_precip: float, window_total: float) -> int:
     """
     降水概率代理值。
 
     归档接口（Archive API）只有 precipitation（毫米），没有 precipitation_probability，
     而 drying 规则里降水概率占 0.25 权重，缺了这项结论会显著偏移。
-    这里用"小时降水量 + 当日累计降水"构造一个单调、可解释的代理值。
+    这里用"小时降水量 + 窗口内累计降水"构造一个单调、可解释的代理值。
     它是代理值，不是观测到的概率，报告里必须这么写。
+
+    第二参数的含义很关键：它必须是「预测窗口内的累计降水」，而不是「当日累计」。
+    早前版本传的是当日累计，于是 09:00 的降水概率只描述「今天下不下雨」，
+    却被要求预测「次日是否干燥」——输入里根本没有次日信息，精确率自然卡在半数附近。
     """
     if hour_precip >= 1.0:
         return 100
@@ -180,11 +184,11 @@ def precip_prob_proxy(hour_precip: float, day_total: float) -> int:
         return 85
     if hour_precip > 0:
         return 65
-    if day_total >= 10:
+    if window_total >= 10:
         return 45
-    if day_total >= 1:
+    if window_total >= 1:
         return 25
-    if day_total > 0:
+    if window_total > 0:
         return 15
     return 5
 
@@ -219,6 +223,34 @@ def pick_current(hours: list) -> dict:
     return hours[0]
 
 
+def window_records(days: dict, sorted_dates: list, index: int, start_hour: int = 9, length: int = 24) -> list:
+    """
+    从第 index 天的 start_hour 起取 length 条逐小时记录，跨日自动拼接。
+
+    为什么必须这么做（这是 2026-11-03 修的一个真缺陷）：
+    线上 weather.js 给内核的是「从当前小时起的未来 48 小时」预报，drying 拿它算时间窗；
+    而回测早前喂的是「当日 0—23 时」的已发生数据，等于让规则看过去、去预测明天。
+    两边的输入口径不一致，回测数字就不能代表线上表现，违反指导书 2.3 的「模型一致」要求。
+    改成 09:00 起连续 24 小时后，回测窗口覆盖当日白天 + 夜间 + 次日凌晨，
+    与线上「当前时刻看未来一天」的形态一致。
+    """
+    records = []
+    cursor = index
+    while cursor < len(sorted_dates) and len(records) < length:
+        for record in days[sorted_dates[cursor]]:
+            if len(records) >= length:
+                break
+            if cursor > index:
+                records.append(record)  # 跨日之后，全天的小时都算窗口内
+                continue
+            hour_text = str(record.get("time"))[11:13]
+            hour = int(hour_text) if hour_text.isdigit() else 0
+            if hour >= start_hour:
+                records.append(record)
+        cursor += 1
+    return records
+
+
 def build_inputs(days: dict, sorted_dates: list) -> list:
     """
     逐日构造样本。每个样本包含三块：
@@ -237,9 +269,17 @@ def build_inputs(days: dict, sorted_dates: list) -> list:
             continue
 
         day_total = sum((number(r.get("precipitation"), 0.0) or 0.0) for r in hours)
-        hourly = [hourly_entry(record, day_total) for record in hours]
+
+        # 返潮按当日 0—23 时判高湿连续性；晾晒按 09:00 起的未来 24 小时（对齐线上预报口径）
+        damp_hours = [hourly_entry(record, day_total) for record in hours]
+        window = window_records(days, sorted_dates, index)
+        if len(window) < 24:
+            continue  # 跨日窗口不完整（数据首尾），不拿半截数据下结论
+        window_total = sum((number(r.get("precipitation"), 0.0) or 0.0) for r in window)
+        hourly = [hourly_entry(record, window_total) for record in window]
+
         current = pick_current(hours)
-        current_entry = hourly_entry(current, day_total)
+        current_entry = hourly_entry(current, window_total)
 
         # 过去 72 小时最低气温：返潮规则用它近似室内表面温度（工作指导书 4.3）
         past_pool = []
@@ -277,7 +317,7 @@ def build_inputs(days: dict, sorted_dates: list) -> list:
                     "humidity": current_entry["humidity"],
                     "windDir": current_entry["windDir"],
                     "windSpeed": current_entry["windSpeed"],
-                    "hourly": hourly,
+                    "hourly": damp_hours,
                     "pastMinTemp72h": past_min,
                     "indoorTemp": None,
                 },
@@ -353,6 +393,52 @@ def call_rule(node_bin: str, rule_id: str, inputs: list, weights: dict | None = 
 
 
 # ------------------------------------------------------------------ 统计
+
+
+def equal_ratio_metrics(results: list, samples: list, target_ratio: float) -> dict | None:
+    """
+    等判出率对比：先把三套权重压到「判适宜的天数占比相同」，再比精确率。
+
+    为什么需要这张表（2026-11-03 补）：
+    三套权重得到的分数分布差别很大。统一用配置里的等级阈值时，
+    判出率从 2.6% 到 48% 不等——判得越宽，召回率越高、精确率越低。
+    那个差异反映的是「阈值落在各自分布的哪个位置」，不是权重好坏。
+    对齐判出率之后，才是在回答「同样的谨慎程度下，谁判得更准」。
+    """
+    scored = [
+        (r.get("score"), s)
+        for r, s in zip(results, samples)
+        if not r.get("degraded") and r.get("score") is not None
+    ]
+    if not scored:
+        return None
+    values = sorted(value for value, _ in scored)
+    total = len(values)
+    picked = max(1, min(total, int(round(total * target_ratio))))
+    threshold = values[total - picked]
+
+    tp = fp = fn = tn = 0
+    for score, sample in scored:
+        predicted_ok = score >= threshold
+        actual_ok = not sample["truth"]["next_bad"]
+        if predicted_ok and actual_ok:
+            tp += 1
+        elif predicted_ok and not actual_ok:
+            fp += 1
+        elif not predicted_ok and actual_ok:
+            fn += 1
+        else:
+            tn += 1
+    n = tp + fp + fn + tn
+    return {
+        "threshold": threshold,
+        "ratio": (tp + fp) / n if n else None,
+        "tp": tp, "fp": fp, "fn": fn, "tn": tn,
+        "accuracy": (tp + tn) / n if n else None,
+        "precision": tp / (tp + fp) if (tp + fp) else None,
+        "recall": tp / (tp + fn) if (tp + fn) else None,
+        "f1": (2 * tp / (2 * tp + fp + fn)) if (2 * tp + fp + fn) else None,
+    }
 
 
 def classify(results: list, samples: list) -> dict:
@@ -700,6 +786,39 @@ def build_report(context: dict) -> str:
     )
     add("")
 
+    add("### 等判出率对比（这一张才可比）")
+    add("")
+    emp_metrics = context["schemes"][0]["metrics"]
+    emp_ratio = (emp_metrics["tp"] + emp_metrics["fp"]) / emp_metrics["total"] if emp_metrics["total"] else 0.0
+    add(
+        "上一张表的判出率并不相同：三套权重的分数分布不同，同一个等级阈值落在各自分布的不同位置，"
+        "判得越宽的方案召回率越高、精确率越低。那种差异反映的是阈值落点，不是权重质量。"
+    )
+    add("")
+    add(
+        f"下面把三套权重都压到判出率 **{percent(emp_ratio)}**（即与经验权重实际判出的天数占比对齐）"
+        "再比，回答的才是「同样谨慎程度下谁判得更准」。"
+    )
+    add("")
+    add("| 方案 | 实际阈值分 | 判出率 | 判适宜天数 | 精确率 | 召回率 | F1 | 误判 | 漏判 |")
+    add("|---|---:|---:|---:|---:|---:|---:|---:|---:|")
+    for scheme in context["schemes"]:
+        er = scheme.get("equal_ratio")
+        if not er:
+            continue
+        add(
+            f"| {scheme['label']} | {er['threshold']:.1f} | {percent(er['ratio'])} | "
+            f"{er['tp'] + er['fp']} | {percent(er['precision'])} | {percent(er['recall'])} | "
+            f"{percent(er['f1'])} | {er['fp']} | {er['fn']} |"
+        )
+    add("")
+    add(
+        "读法：判出率相同时，精确率高说明给出的「适宜」更可靠，召回率高说明漏掉的好天更少。"
+        "如果三套权重在这张表里仍然接近，就说明**在这份数据的口径下，权重怎么调都提供不了更多信息**，"
+        "问题的重心应该放在输入口径与判定方式上，而不是继续搜权重。"
+    )
+    add("")
+
     add("### 混淆矩阵")
     add("")
     for scheme in context["schemes"]:
@@ -886,6 +1005,18 @@ def main(argv: list | None = None) -> int:
         scheme["distribution"] = score_distribution(results)
 
     baseline = baseline_metrics(samples)
+
+    # 等判出率对比：三套权重分数分布不同，统一阈值会让「判得宽」的方案显得召回高、精确低。
+    # 把判出率对齐后再比，才是在比权重质量而不是比阈值落点。
+    empirical_metrics = schemes[0]["metrics"]
+    empirical_ratio = (
+        (empirical_metrics["tp"] + empirical_metrics["fp"]) / empirical_metrics["total"]
+        if empirical_metrics["total"]
+        else 0.0
+    )
+    for scheme in schemes:
+        scheme["equal_ratio"] = equal_ratio_metrics(scheme["results"], samples, empirical_ratio)
+    log(f"等判出率对比基准：判出率 {empirical_ratio:.1%}（按经验权重方案的实际判出比例对齐）")
 
     log("调用 run_rule.js 跑 damp…")
     damp_results = call_rule(args.node, "damp", damp_inputs)
