@@ -49,6 +49,7 @@ node scripts/ssr-check.mjs           # 五个页面渲染冒烟测试
 | 2026-11-02 | M7 回测脚本与实验报表（真实数据 729 天已跑通） | 脚本完成，结论待复核 |
 | 2026-11-03 | v0.8.0 晾晒标定：查明根因为回测输入口径错配，阈值 68/55/35 | 完成 |
 | 2026-11-03 | v0.9.0 T-5 假期出行准备清单（只对 7 天预报窗口内给建议） | 完成 |
+| 2026-11-03 | v0.10.0 全国 370 个城市 + 当前位置自动定位 | 完成 |
 | 待办 | 可用性测试（20 人五级量表） | 未开始 |
 | 待办 | 长期部署链接（Vercel / GitHub Pages，结题材料要求） | 未开始 |
 | 2027-09 | 结题报告与演示视频 | 计划 |
@@ -58,13 +59,14 @@ node scripts/ssr-check.mjs           # 五个页面渲染冒烟测试
 ### 代码
 
 ```
-public/data/     配置层：指数权重、假期、税率、穿衣表、城市、办事清单（改这里，不改代码）
+public/data/     配置层：指数权重、假期、税率、穿衣表、全国城市、办事清单（改这里，不改代码）
 src/core/        内核层：引擎、7 条规则、纯函数工具（禁止网络与 DOM）
-src/services/    服务层：天气取数 + 24h 缓存、本地存储、政策读取
+src/services/    服务层：天气取数 + 24h 缓存、本地存储、政策读取、浏览器定位
 src/components/  组件层：DecisionCard / ScoreBar / ActionList / FormField / TrendChart
 src/modules/     业务模块：outing / time / money / affairs
 src/views/       页面：Home / Time / Money / Affairs / Settings
 scripts/backtest/  回测与实验脚本（Python 标准库 + Node 复用内核）
+scripts/build-cities.mjs  生成全国城市坐标（一次性构建工具）
 docs/            设计说明书、核心契约、决策记录、周志
 tests/           单元测试（node:test）
 ```

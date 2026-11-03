@@ -132,7 +132,12 @@ config.holidays.years['2026'] = {
 
 ### 其他
 - `clothing-table.json`：`{ table: [{ min, max, level, label, outfit, extras[] }] }`，`min` 含、`max` 不含
-- `cities.json`：`{ default, cities: [{ id, name, lat, lon, timezone }] }`
+- `cities.json`：`{ default, cities: [{ id, name, province, lat, lon, timezone }] }`
+  - 覆盖全国 370 个城市（34 个省级行政区），由 `scripts/build-cities.mjs` 生成，**不要手改**
+  - `default` 是城市 id（当前为 `shenzhen`）。取默认城市必须读这个字段，
+    **不能用 `cities[0]`**——列表按省份排序，第一个是「安庆」
+  - `id` 为行政区划 adcode（如 `440300`），深圳/广州/珠海/汕头沿用旧的拼音 id，
+    保证用户已存的 `cityId` 不失效。新增城市不得复用旧 id
 - `checklists.json`：`{ meta: { collectedAt, disclaimer }, checklists: [{ id, title, channel, timeline, materials[] }] }`
 
 ---
@@ -173,6 +178,31 @@ weekdayLabel('2026-01-01')    // '周四'
 
 ### config.js（地基组维护，其他组不要改）
 `loadConfig()` 取回六份 JSON 并校验，返回 `{ config, loadErrors }`。
+
+### location.js
+```js
+import { locate, locationCapability, reasonFromErrorCode } from '@/services/location.js'
+
+locationCapability()   // → { available, reason }  reason: '' | unsupported | insecure
+await locate({ timeout?, maxAge? })
+// → { ok, latitude, longitude, accuracy, reason, message }
+//   reason: '' | unsupported | insecure | denied | unavailable | timeout
+```
+
+**永不 throw**，失败一律返回 `ok: false` + 具体 `reason`。页面必须按 `reason`
+分别给提示——四种失败的下一步动作完全不同，一句"定位失败"等于没说：
+`denied` 要引导去改权限、`insecure` 要明说 http 页面根本不允许、
+`unavailable` 要提示系统开关、`timeout` 可以重试。
+
+拿到坐标后**不要在本模块内做"最近的哪个城市"判断**，交给内核 `findNearestCity`：
+
+```js
+import { findNearestCity, haversineKm, describeDistance, NEARBY_KM } from '@/core/utils/geo.js'
+haversineKm(lat1, lon1, lat2, lon2)      // 球面距离 km，坐标非法返回 NaN
+findNearestCity(cities, lat, lon)        // → { city, distanceKm } | null
+describeDistance(km)                     // → '约 N 公里内' / '约 N 公里外'
+```
+坐标非法或列表为空时返回 `null`，**不允许硬凑一个城市**。
 
 ---
 
