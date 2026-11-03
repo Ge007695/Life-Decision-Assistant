@@ -15,6 +15,7 @@ import { fileURLToPath } from 'node:url'
 import { createConfig } from '../src/core/config.js'
 import { configure, run } from '../src/core/engine.js'
 import { buildDateMap, getYearNode } from '../src/services/policy.js'
+import { buildTripPlan, shiftDate } from '../src/modules/time/tripPlan.js'
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..')
 const DATA = join(ROOT, 'public', 'data')
@@ -154,6 +155,69 @@ check(
   '调休上班日优先级高于周末与假期',
   mapBefore['2026-10-10']?.type === 'makeup',
   `2026-10-10 → ${mapBefore['2026-10-10']?.type}`,
+)
+
+// ⑤ T-5 假期出行清单：只在预报窗口内给建议（A 方案的核心约束）
+function fakeForecast(start, days, override = {}) {
+  const out = []
+  for (let d = 0; d < days; d += 1) {
+    const date = shiftDate(start, d)
+    const day = override[d] || {}
+    for (let h = 0; h < 24; h += 1) {
+      out.push({
+        time: `${date}T${String(h).padStart(2, '0')}:00`,
+        temp: day.temp ?? 26,
+        humidity: day.humidity ?? 60,
+        windSpeed: day.windSpeed ?? 2,
+        windDir: 'NNE',
+        precipProb: day.precipProb ?? 10,
+        solar: 0,
+      })
+    }
+  }
+  return out
+}
+
+const tripNear = buildTripPlan({ config, today: '2026-09-28', hourlyAll: fakeForecast('2026-09-28', 7) })
+check(
+  '5.3-5',
+  'T-5：假期落在 7 天预报内时，逐日给出穿衣与带伞建议',
+  tripNear.status === 'ok' &&
+    tripNear.coverage.inForecast === 4 &&
+    tripNear.days.every((day) => !day.inForecast || (day.clothing && day.umbrella)),
+  `国庆 7 天里 ${tripNear.coverage.inForecast} 天有预报，其余标超出范围`,
+)
+
+const tripFar = buildTripPlan({ config, today: '2026-09-01', hourlyAll: fakeForecast('2026-09-01', 7) })
+check(
+  '5.3-6',
+  'T-5：假期超出预报窗口时不给任何建议，不拿气候均值顶替',
+  tripFar.status === 'tooFar' &&
+    tripFar.days.every((day) => !day.inForecast) &&
+    tripFar.checklist.outfit.length === 0 &&
+    tripFar.checklist.gear.length === 0,
+  tripFar.message,
+)
+
+const tripPending = buildTripPlan({ config, today: '2026-11-03', hourlyAll: fakeForecast('2026-11-03', 7) })
+check(
+  '5.3-7',
+  'T-5：次年安排待公布时不报错、不产出清单',
+  tripPending.status === 'pending' && tripPending.days.length === 0,
+  tripPending.message,
+)
+
+const tripMixed = buildTripPlan({
+  config,
+  today: '2026-09-28',
+  hourlyAll: fakeForecast('2026-09-28', 7, { 3: { precipProb: 95, windSpeed: 9 } }),
+})
+const mixedGear = tripMixed.checklist.gear
+check(
+  '5.3-8',
+  'T-5：雨具清单按最坏一天汇总，「带伞」与「不用带伞」不同时出现',
+  mixedGear.some((item) => item.includes('伞')) && !mixedGear.includes('不用带伞'),
+  `按 ${tripMixed.checklist.worstDay} 准备：${mixedGear.join(' / ')}`,
 )
 
 console.log('\n=== 6.4 花钱模块验收 ===')
