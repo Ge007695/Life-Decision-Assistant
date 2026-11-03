@@ -146,12 +146,18 @@ config.holidays.years['2026'] = {
 
 ### storage.js
 ```js
-import storage, { get, set, remove, listKeys, clearAll, isPersistent, KEYS } from '@/services/storage.js'
+import storage, { get, set, remove, listKeys, clearAll, isPersistent, setSyncSink, KEYS } from '@/services/storage.js'
 get(key, fallback)      // key 不带前缀，自动补 lda:
-set(key, value)         // 返回 boolean：false 表示降级到内存态
+set(key, value, opts?)  // 返回 boolean：false 表示降级到内存态；opts.silent 不通知云同步
+remove(key, opts?)
+clearAll(opts?)
 KEYS = { SETTINGS, WEATHER, SALARY, CHECKLIST, FEEDBACK }
 ```
 隐私模式下 `set` 返回 `false`，页面要提示“本次记录不会保存”。
+
+**本机仍是唯一的同步读写入口**，页面代码照旧同步调用，不要为了"上云"改成 `await`。
+`setSyncSink(fn)` 只由 `cloud-sync.js` 调用一次；云同步回填本机必须传 `{ silent: true }`，
+否则"拉下来又推回去"会形成无限回声。以 `__` 开头的键是内部标记，不参与同步。
 
 ### weather.js
 ```js
@@ -204,6 +210,37 @@ describeDistance(km)                     // → '约 N 公里内' / '约 N 公�
 ```
 坐标非法或列表为空时返回 `null`，**不允许硬凑一个城市**。
 
+### cloud.js / cloud-sync.js
+```js
+import { cloud, CLOUD_PUBLIC_CONFIG } from '@/services/cloud.js'   // 全应用唯一客户端
+import {
+  cloudState, initCloud, isSignedIn,
+  requestPhoneCode, submitPhoneCode, signInWithWorkBuddy, signOutCloud,
+  retrySync, pullFromCloud, maskPhone,
+} from '@/services/cloud-sync.js'
+
+await initCloud()                       // 启动时调一次：处理 OAuth 回调 → 恢复会话 → 拉云端
+cloudState                              // 响应式：{ ready, user, phase, message, pendingCount, … }
+await requestPhoneCode(phone)           // → { verificationId, isExistingUser }
+await submitPhoneCode(phone, challenge, token)
+await signInWithWorkBuddy()             // 跳授权页（同标签页）
+await signOutCloud()                    // 云端保留，本机清空
+await pullFromCloud()                   // 手动拉取，以云端覆盖本机
+```
+
+`endpoint` / `publishableKey` / `oauthRelayBaseUrl` 是**公开配置**，随前端产物发布；
+真正的环境凭据在服务端，前端拿不到。**不要**在前端自己传 `owner_id`——由数据库
+`DEFAULT auth.uid()` 填充，越权交给 RLS。
+
+`initCloud()` 必须在 `app.mount()` 之前 await（否则首屏会闪一下"未登录"），
+并且要带超时兜底：`main.js` 用 `CLOUD_BOOT_TIMEOUT_MS = 6000` 包了一层，
+网络不通时最多等 6 秒就继续渲染。
+
+数据表 `public.user_records`（每用户每键一行）。RLS 必须写 `TO authenticated`
+并显式排除 `auth.uid() = 'anon'`——未登录时 `auth.uid()` 返回字符串 `'anon'` 而非 NULL，
+只写 `owner_id = auth.uid()` 会让所有匿名访客共用一个数据桶。
+自检：`node scripts/cloud-check.mjs`（未登录查询应 0 行、写入应被 42501 拒）。
+
 ---
 
 ## 六、组件层 Props（`src/components/`）
@@ -215,6 +252,7 @@ describeDistance(km)                     // → '约 N 公里内' / '约 N 公�
 | `ActionList` | `actions[]` `storageKey` `title` `dense` | `change` | 勾选状态存本地 |
 | `FormField` | `label` `hint` `error` `suffix` `inline` + 默认插槽(作用域含 `id`/`error`) | — | 统一输入控件 |
 | `TrendChart` | `option`(ECharts option) `height` | — | 按需引入 echarts |
+| `CloudAccount` | — | — | 登录态与同步状态卡片，状态全取 `cloudState`，无 props |
 
 引入方式统一用别名：`import DecisionCard from '@/components/DecisionCard.vue'`。
 
