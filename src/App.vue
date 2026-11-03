@@ -68,7 +68,7 @@ const hasConfigError = computed(() => configErrors.length > 0)
         配置版本：指数 v{{ versions.indices || '—' }} · 税率 {{ versions.taxRules || '—' }} · 假期
         {{ versions.holidays || '—' }}
       </p>
-      <p>纯前端运行，不采集个人信息。数据与政策以官方最新公告为准。</p>
+      <p>登录后设置与记录同步保存在你的账号下；未登录时仅存在本机浏览器。数据与政策以官方最新公告为准。</p>
     </footer>
   </div>
 </template>

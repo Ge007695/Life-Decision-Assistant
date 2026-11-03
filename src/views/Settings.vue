@@ -7,7 +7,9 @@
  */
 import { computed, inject, nextTick, onBeforeUnmount, onMounted, ref } from 'vue'
 import FormField from '@/components/FormField.vue'
+import CloudAccount from '@/components/CloudAccount.vue'
 import storage, { get, set, KEYS } from '@/services/storage.js'
+import { cloudState } from '@/services/cloud-sync.js'
 import { locate } from '@/services/location.js'
 import { describeDistance, findNearestCity } from '@/core/utils/geo.js'
 
@@ -272,7 +274,9 @@ function doClear() {
   cityId.value = defaultCityId.value
   indoorTemp.value = indoorDefault.value
   feedbackOffset.value = 0
-  clearState.value = '已清除本应用全部本地数据，页面上的设置已恢复默认，需要时请重新保存。'
+  clearState.value = cloudState.user
+    ? '已清除本机与云端的全部记录，页面上的设置已恢复默认，需要时请重新保存。'
+    : '已清除本应用全部本地数据，页面上的设置已恢复默认，需要时请重新保存。'
 }
 
 /* ---------- 配置版本与来源 ---------- */
@@ -297,8 +301,13 @@ onMounted(() => {
   <div class="page stack">
     <header class="stack-sm">
       <h1 class="card-title">设置</h1>
-      <p class="faint tiny">设置只保存在本机浏览器，不上传、不关联账号。</p>
+      <p class="faint tiny">
+        默认只保存在这台设备的浏览器；登录后自动同步到云端，换设备或清缓存可恢复。
+      </p>
     </header>
+
+    <!-- 云同步账号 -->
+    <CloudAccount />
 
     <!-- 城市 -->
     <section class="card stack-sm">
@@ -430,10 +439,10 @@ onMounted(() => {
       </p>
     </section>
 
-    <!-- 本地数据 -->
+    <!-- 本机与云端数据 -->
     <section class="card stack-sm">
       <div class="row-between">
-        <h2 class="section-title section-flush">本地数据</h2>
+        <h2 class="section-title section-flush">本机数据</h2>
         <span class="chip" :class="persistent ? 'chip-lv4' : 'chip-lv2'">
           {{ persistent ? '可持久保存' : '隐私模式' }}
         </span>
@@ -445,6 +454,11 @@ onMounted(() => {
 
       <p class="small muted">
         所有键都带 <code>lda:</code> 前缀，清除只影响本应用，不动同域其他站点数据。
+        天气数据是有时效的缓存，只留在本机，不同步到云端。
+      </p>
+
+      <p v-if="cloudState.user" class="small muted">
+        当前已登录：这里的每一项同时对应云端的一条记录，清除会一起删掉。
       </p>
 
       <ul v-if="keys.length" class="key-list">
@@ -455,12 +469,14 @@ onMounted(() => {
       <div class="divider" />
 
       <div v-if="!confirming" class="row">
-        <button type="button" class="btn btn-sm" @click="askClear">清除本应用全部本地数据</button>
+        <button type="button" class="btn btn-sm" @click="askClear">清除本应用全部数据</button>
         <span class="faint tiny">共 {{ keys.length }} 个键</span>
       </div>
       <div v-else class="confirm stack-sm">
         <p class="small">
-          确认清除这 {{ keys.length }} 个键吗？设置、勾选进度与天气缓存都会被删除，且无法恢复。
+          确认清除这 {{ keys.length }} 个键吗？设置、勾选进度与天气缓存都会被删除，且无法恢复{{
+            cloudState.user ? '；同时会删除云端保存的同一批记录' : ''
+          }}。
         </p>
         <div class="row">
           <button type="button" class="btn btn-sm confirm-btn" @click="doClear">确认清除</button>

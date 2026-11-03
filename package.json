@@ -1,6 +1,6 @@
 {
   "name": "decision-assistant",
-  "version": "0.10.0",
+  "version": "0.11.0",
   "private": true,
   "type": "module",
   "description": "生活决策助手 — 面向日常决策的规则引擎（深圳生活场景）",
@@ -14,9 +14,11 @@
     "verify": "node scripts/verify-acceptance.mjs",
     "smoke": "node scripts/ssr-check.mjs",
     "irr:compare": "node scripts/experiments/irr-compare.mjs",
-    "build:cities": "node scripts/build-cities.mjs"
+    "build:cities": "node scripts/build-cities.mjs",
+    "cloud-check": "node scripts/cloud-check.mjs"
   },
   "dependencies": {
+    "@tencent-ai/workbuddy-cloud-sdk": "^0.1.4-dev.ca27990.202610161713",
     "echarts": "^5.6.0",
     "vue": "^3.5.13",
     "vue-router": "^4.5.0"
