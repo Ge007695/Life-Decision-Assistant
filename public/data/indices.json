@@ -45,9 +45,9 @@
         "noWindowText": "全天不建议"
       },
       "levels": [
-        { "min": 80, "level": 4, "label": "适宜", "headline": "今天适合晾晒，{bestWindow} 前收衣" },
-        { "min": 60, "level": 3, "label": "一般", "headline": "可以晾，但干得慢，建议延长晾晒时间" },
-        { "min": 40, "level": 2, "label": "较差", "headline": "不建议晾晒，改为室内除湿" },
+        { "min": 68, "level": 4, "label": "适宜", "headline": "今天适合晾晒，{bestWindow} 前收衣" },
+        { "min": 55, "level": 3, "label": "一般", "headline": "可以晾，但干得慢，建议延长晾晒时间" },
+        { "min": 35, "level": 2, "label": "较差", "headline": "不建议晾晒，改为室内除湿" },
         { "min": 0, "level": 1, "label": "不宜", "headline": "今天晾不干，改用烘干或推迟" }
       ]
     },
