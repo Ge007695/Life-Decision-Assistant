@@ -31,10 +31,10 @@ npm run preview    # 预览构建产物
 验证命令（结题与中期检查可现场跑）：
 
 ```bash
-npm run test              # 107 条单元测试，每个规则含典型值/边界值/异常值
+npm run test              # 173 条单元测试，每个规则含典型值/边界值/异常值
 npm run lint              # 内核层纪律检查（禁止 fetch/window/document/localStorage）
 npm run m1                # M1 判据：命令行输出合法的 DecisionResult
-node scripts/verify-acceptance.mjs   # 19 项验收标准逐条核对
+node scripts/verify-acceptance.mjs   # 25 项验收标准逐条核对
 node scripts/ssr-check.mjs           # 五个页面渲染冒烟测试
 ```
 
@@ -53,6 +53,7 @@ node scripts/ssr-check.mjs           # 五个页面渲染冒烟测试
 | 2026-11-03 | v0.10.0 全国 370 个城市 + 当前位置自动定位 | 完成 |
 | 2026-11-03 | v0.11.0 账号与云端同步（换设备/清缓存可恢复） | 完成 |
 | 2026-11-05 | v0.12.0 T-4 学期节点（校历与寒暑假倒计时）+ 修 K1/K2/K3/K8 | 完成 |
+| 2026-11-05 | v0.13.0 P2 四项：一周衣物、运动适宜度、两地对比、历史同期（功能清单 22/22） | 完成 |
 | 待办 | 可用性测试（20 人五级量表） | 未开始 |
 | 待办 | 长期部署链接（Vercel / GitHub Pages，结题材料要求） | 未开始 |
 | 2027-09 | 结题报告与演示视频 | 计划 |
@@ -63,10 +64,10 @@ node scripts/ssr-check.mjs           # 五个页面渲染冒烟测试
 
 ```
 public/data/     配置层：指数权重、假期、税率、穿衣表、全国城市、办事清单（改这里，不改代码）
-src/core/        内核层：引擎、7 条规则、纯函数工具（禁止网络与 DOM）
-src/services/    服务层：天气取数 + 24h 缓存、本地存储、政策读取、浏览器定位、云同步
+src/core/        内核层：引擎、9 条规则、纯函数工具（禁止网络与 DOM）
+src/services/    服务层：天气取数 + 24h 缓存、空气质量、历史归档、本地存储、政策读取、浏览器定位、云同步
 src/components/  组件层：DecisionCard / ScoreBar / ActionList / FormField / TrendChart / CloudAccount
-src/modules/     业务模块：outing / time / money / affairs
+src/modules/     业务模块：outing（含 P2 四张卡）/ time / money / affairs
 src/views/       页面：Home / Time / Money / Affairs / Settings
 scripts/backtest/  回测与实验脚本（Python 标准库 + Node 复用内核）
 scripts/build-cities.mjs  生成全国城市坐标（一次性构建工具）

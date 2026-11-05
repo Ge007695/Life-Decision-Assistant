@@ -88,6 +88,8 @@ export function evaluate(input, ctx) { ... }
 | `damp` | `temp, humidity, windDir, windSpeed, hourly[], pastMinTemp72h, indoorTemp` | 三条判定见 `indices.json#damp.thresholds` |
 | `umbrella` | `precipProb, windSpeed, hourly[]` | 是否带伞、是否推迟 |
 | `clothing` | `temp, humidity, windSpeed, apparentTemp?, feedbackOffset?` | 体感温度查 `clothing-table.json` |
+| `weeklyWear` | `days: [{date, tempMax, tempMin}]` | O-8。查同一张穿衣表后按档位汇总件数；`score` 表示预报覆盖度，不是好坏评分 |
+| `sport` | `temp, humidity, aqi?, uv?` | O-9。四维折分再加权；`aqi`/`uv` 缺失时按剩余权重重归一并标 `degraded` |
 | `holiday` | `year?, today?` | 读 `config.holidays`，无数据年份返回“待公布” |
 | `salary` | `gross, mode: 'service'\|'salary', months?, specialDeduction?, dayRate?, workDays?` | 读 `config.taxRules` |
 | `installment` | `principal, periods, feeRate, feeRateUnit?` | 返回月利率与年化，含三算法对比。**`feeRate` 默认按百分数理解**：`0.6` = 每期 0.6%。小数口径必须显式传 `feeRateUnit: 'decimal'`（`0.006`）。传错单位不报错、年化差 100 倍 |
@@ -219,6 +221,29 @@ describeDistance(km)                     // → '约 N 公里内' / '约 N 公�
 ```
 坐标非法或列表为空时返回 `null`，**不允许硬凑一个城市**。
 
+### air.js（空气质量与紫外线，O-9 用）
+
+```js
+import air from '@/services/air.js'
+await air.get(city, { force })  // → { ok, stale, data: { aqi, pm25, uv, observedAt }, error }
+```
+
+缓存 3 小时（比天气的 24 小时短：AQI 变化快）。`aqi` 是 **us_aqi**，分档 50/100/150/200/300，
+与中国 AQI 基本对齐；**不要换成 `european_aqi`**（0—20 优），分级与用户认知不符。
+失败返回 `ok:false`，不抛异常。
+
+### climate.js（历史同期，O-11 用）
+
+```js
+import climate from '@/services/climate.js'
+await climate.getSamePeriod(city, '2026-11-05', 7)
+// → { ok, stale, start, end, sourceStart, sourceEnd, data: [{ date, tempMax, tempMin, precip }], error }
+```
+
+数据源是 archive-api（ERA5 再分析），缓存 7 天（历史值不再变）。
+`precip` 是**降水量 mm**，与预报侧的 `precipProb`（降水概率 %）不是一回事，**不得混用**。
+「去年同期」= 起始日减一年；2 月 29 日会落到 3 月 1 日（JS Date 的行为）。
+
 ### cloud.js / cloud-sync.js
 ```js
 import { cloud, CLOUD_PUBLIC_CONFIG } from '@/services/cloud.js'   // 全应用唯一客户端
@@ -262,7 +287,27 @@ schoolTerms(config)                // → [{ name, kind, start, end }]，顶层�
 推错比不给更糟。
 
 **约定**：会被 `node --test` 直接 import 的模块一律用相对路径 import，不要用 `@` 别名，
-否则 Node 解析不到（`@` 只在 Vite 里有效）。`countdown.js`、`tripPlan.js` 都是这么做的。
+否则 Node 解析不到（`@` 只在 Vite 里有效）。`countdown.js`、`tripPlan.js`、`compare.js`、
+`history.js` 都是这么做的。
+
+```js
+import { buildCompare } from '@/modules/outing/compare.js'
+buildCompare({ config, left: { city, weather }, right: { city, weather }, settings })
+// → { left, right, metrics[], weekRows[], indices[], summary }
+
+import { buildHistory, describe } from '@/modules/outing/history.js'
+buildHistory({ forecastDaily, historyDaily, today, days })
+// → { rows[], summary, status: 'ok' | 'insufficient' }
+describe(summary)   // → 一句话结论，只陈述差异
+```
+
+两条硬约束：
+
+- **compare 不判「哪个城市更好」**。好坏取决于用户要做什么（晒被子看晾晒、跑步看体感、
+  避雨看降水），给总分排名等于替用户做决定。只给差异事实，箭头只表示哪边分数高。
+  一边降级时 `delta` 为 `null`，**不用 0 顶替**。
+- **history 的平均值只统计两边都有值的天**。各自独立求平均会在缺数据时比不同批日子，
+  差值看着有数、实际没有意义。
 
 ---
 
