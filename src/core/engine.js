@@ -139,7 +139,7 @@ export function run(id, input, config = activeConfig, options = {}) {
     actions: Array.isArray(partial.actions) ? partial.actions.filter(Boolean) : [],
     evidence: Array.isArray(partial.evidence) ? partial.evidence : [],
     configRef: rule.configRef || `indices.json#${id}`,
-    updatedAt: nowIso(ctx),
+    updatedAt: nowIso(ctx.now),
     ...(partial.degraded ? { degraded: true } : {}),
     ...(partial.meta ? { meta: partial.meta } : {}),
   }

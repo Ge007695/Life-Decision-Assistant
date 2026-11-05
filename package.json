@@ -1,6 +1,6 @@
 {
   "name": "decision-assistant",
-  "version": "0.11.0",
+  "version": "0.12.0",
   "private": true,
   "type": "module",
   "description": "生活决策助手 — 面向日常决策的规则引擎（深圳生活场景）",
@@ -13,7 +13,7 @@
     "m1": "node scripts/m1-skeleton.mjs",
     "verify": "node scripts/verify-acceptance.mjs",
     "smoke": "node scripts/ssr-check.mjs",
-    "irr:compare": "node scripts/experiments/irr-compare.mjs",
+    "irr:compare": "python scripts/backtest/irr_backtest.py",
     "build:cities": "node scripts/build-cities.mjs",
     "cloud-check": "node scripts/cloud-check.mjs"
   },

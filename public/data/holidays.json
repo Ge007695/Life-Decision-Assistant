@@ -1,9 +1,21 @@
 {
   "meta": {
-    "version": "1.0.0",
-    "updated": "2026-11-02",
-    "source": "国务院办公厅关于2026年部分节假日安排的通知（2025-11-04）；后续年度按年记录于 years.<年份>.source",
+    "version": "1.1.0",
+    "updated": "2026-11-05",
+    "source": "国务院办公厅关于2026年部分节假日安排的通知（2025-11-04）；校历见 schoolCalendar.source；后续年度按年记录于 years.<年份>.source",
     "note": "每年 11—12 月国务院办公厅发布次年安排。无数据的年份 status 为 pending，页面显示“待公布”并保留手工录入入口，不能白屏或报错。"
+  },
+  "schoolCalendar": {
+    "source": "深圳大学教务部《关于重新公布执行深圳大学2026-2027学年第一学期校历的通知》（2026-06-17）",
+    "sourceUrl": "https://teacher.szu.edu.cn/info/1008/2568.htm",
+    "collectedAt": "2026-11-05",
+    "note": "该通知正文只写“见附件”，具体日期在附件校历图里。此处日期按附件转录，并与教务部/校内多个渠道发布的同一份校历交叉核对一致；如遇临时调整，以教务部最新公布为准。2025-2026 学年第二学期数据来自同一部门发布的上一版校历说明。",
+    "terms": [
+      { "name": "2025-2026 学年第二学期", "kind": "term", "start": "2026-03-04", "end": "2026-07-17" },
+      { "name": "暑假", "kind": "break", "start": "2026-07-18", "end": "2026-08-27" },
+      { "name": "2026-2027 学年第一学期", "kind": "term", "start": "2026-08-28", "end": "2027-01-22" },
+      { "name": "寒假", "kind": "break", "start": "2027-01-25", "end": "2027-02-22" }
+    ]
   },
   "years": {
     "2026": {
@@ -29,7 +41,7 @@
         "2026-10-10"
       ],
       "schoolTerms": [],
-      "schoolTermsNote": "校历以深圳大学教务处公布为准，尚未采集"
+      "schoolTermsNote": "学期数据统一放在顶层 schoolCalendar，本节留空避免同一学期在两处维护"
     },
     "2027": {
       "status": "pending",
@@ -39,7 +51,7 @@
       "holidays": [],
       "makeupWorkdays": [],
       "schoolTerms": [],
-      "schoolTermsNote": "校历以深圳大学教务处公布为准，尚未采集"
+      "schoolTermsNote": "学期数据统一放在顶层 schoolCalendar，本节留空避免同一学期在两处维护"
     }
   }
 }

@@ -165,6 +165,27 @@ export function validateHolidays(raw) {
     }
   }
 
+  // 校历放在顶层：同一学期只维护一次，不在 years.2026 / years.2027 里各写一半，
+  // 否则跨年的寒假会出现两份，改了一处漏另一处。
+  const calendar = raw.schoolCalendar
+  if (calendar !== undefined) {
+    if (!isPlainObject(calendar)) {
+      errors.push('schoolCalendar: 必须是对象')
+    } else {
+      for (const [i, term] of (calendar.terms || []).entries()) {
+        const tp = `schoolCalendar.terms[${i}]`
+        if (!term.name) errors.push(`${tp}: 缺少 name`)
+        if (!DATE_RE.test(term.start || '') || !DATE_RE.test(term.end || '')) {
+          errors.push(`${tp}: start / end 必须是 YYYY-MM-DD`)
+        }
+        if (term.start && term.end && term.start > term.end) errors.push(`${tp}: start 晚于 end`)
+        if (term.kind !== undefined && !['term', 'break'].includes(term.kind)) {
+          errors.push(`${tp}.kind: 只能是 term / break`)
+        }
+      }
+    }
+  }
+
   return errors
 }
 

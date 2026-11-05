@@ -16,6 +16,7 @@ import { createConfig } from '../src/core/config.js'
 import { configure, run } from '../src/core/engine.js'
 import { buildDateMap, getYearNode } from '../src/services/policy.js'
 import { buildTripPlan, shiftDate } from '../src/modules/time/tripPlan.js'
+import { buildSchoolStatus, schoolTerms } from '../src/modules/time/countdown.js'
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..')
 const DATA = join(ROOT, 'public', 'data')
@@ -220,8 +221,28 @@ check(
   `按 ${tripMixed.checklist.worstDay} 准备：${mixedGear.join(' / ')}`,
 )
 
-console.log('\n=== 6.4 花钱模块验收 ===')
+// T-4 学期节点：指导书要求「距寒暑假还有几天，开学/放假日期」
+const terms = schoolTerms(config)
+const termNames = terms.map((term) => term.name)
+const hasTerms = terms.length >= 4 && terms.some((term) => term.kind === 'break')
+const schoolMid = buildSchoolStatus(config, '2026-11-05')
+check(
+  '5.3-9',
+  'T-4：校历已录入开学与寒暑假日期，学期中能给出「距寒假还有几天」',
+  hasTerms && schoolMid.state === 'inTerm' && Number.isFinite(schoolMid.days),
+  `${termNames.join(' / ')}；2026-11-05 → ${schoolMid.lead}${schoolMid.days}天`,
+)
 
+const schoolGap = buildSchoolStatus(config, '2027-01-23')
+const schoolOut = buildSchoolStatus(config, '2028-05-01')
+check(
+  '5.3-10',
+  'T-4：学期末到假期之间的空档与校历范围之外都不报错，且不推测',
+  schoolGap.days === 2 && schoolOut.state === 'unknown',
+  `2027-01-23 空档给 ${schoolGap.days} 天；2028-05-01 → ${schoolOut.message}`,
+)
+
+console.log('\n=== 6.4 花钱模块验收 ===')
 const PLAN = { principal: 6000, periods: 12, feeRate: 0.6 }
 const inst = run('installment', PLAN)
 const annual = inst.meta?.annualRate ?? NaN

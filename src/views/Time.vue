@@ -12,7 +12,7 @@ import ActionList from '@/components/ActionList.vue'
 import { run } from '@/core/engine.js'
 import * as policy from '@/services/policy.js'
 import { LEGEND, WEEKDAYS, withMeta, shortDate } from '@/modules/time/calendar.js'
-import { buildCountdown, yearOf } from '@/modules/time/countdown.js'
+import { buildCountdown, buildSchoolStatus, yearOf } from '@/modules/time/countdown.js'
 import CalendarGrid from '@/modules/time/CalendarGrid.vue'
 import TripPlan from '@/modules/time/TripPlan.vue'
 
@@ -47,8 +47,17 @@ const makeupActions = computed(() =>
 )
 const makeupKey = computed(() => `checklist:makeup:${selectedYear.value}`)
 
-const schoolTerms = computed(() => yearNode.value.schoolTerms || [])
-const schoolNote = computed(() => yearNode.value.schoolTermsNote || '校历以深圳大学教务处公布为准')
+const schoolCalendar = computed(() => config?.holidays?.schoolCalendar || null)
+/** T-4：今天在上课还是放假、距下一个寒暑假/开学还有几天 */
+const schoolStatus = computed(() => buildSchoolStatus(config, today))
+const schoolTermList = computed(() => {
+  const list = schoolCalendar.value?.terms || yearNode.value.schoolTerms || []
+  return list.map((term) => ({ kind: 'term', ...term }))
+})
+const schoolNote = computed(() => schoolCalendar.value?.source || '校历以深圳大学教务部公布为准')
+const schoolSourceUrl = computed(() => schoolCalendar.value?.sourceUrl || '')
+const schoolCollectedAt = computed(() => schoolCalendar.value?.collectedAt || '')
+const schoolCaveat = computed(() => schoolCalendar.value?.note || '')
 
 const holidayCount = computed(() => (yearNode.value.holidays || []).length)
 const source = computed(() => policy.policySource(yearNode.value))
@@ -178,19 +187,38 @@ const holidaysVersion = computed(() => config?.versions?.holidays || '—')
 
     <!-- T-4 学期节点 -->
     <section class="card stack-sm">
-      <h2 class="section-title section-flush">学期节点</h2>
-      <template v-if="schoolTerms.length">
+      <div class="row-between">
+        <h2 class="section-title section-flush">学期节点</h2>
+        <span v-if="schoolStatus.state === 'onBreak'" class="chip chip-lv4">假期中</span>
+        <span v-else-if="schoolStatus.state === 'inTerm'" class="chip chip-lv3">学期中</span>
+        <span v-else-if="schoolStatus.state === 'unknown'" class="chip chip-lv2">待补录</span>
+      </div>
+      <template v-if="schoolTermList.length">
+        <p v-if="schoolStatus.days !== undefined" class="term-lead">
+          {{ schoolStatus.lead }}<strong class="num">{{ schoolStatus.days }}</strong>天
+        </p>
+        <p v-else class="muted small">{{ schoolStatus.message }}</p>
+        <p v-if="schoolStatus.detail" class="small muted">{{ schoolStatus.detail }}</p>
         <ul class="stack-sm">
-          <li v-for="term in schoolTerms" :key="term.name" class="row-between term">
-            <span>{{ term.name }}</span>
-            <span class="small muted num">
-              {{ term.start }} — {{ term.end }}
+          <li v-for="term in schoolTermList" :key="term.name" class="term">
+            <span class="term-name">
+              {{ term.name }}
+              <span v-if="term.kind === 'break'" class="chip chip-lv2 tag">假期</span>
+              <span v-else-if="schoolStatus.term && schoolStatus.term.name === term.name" class="chip chip-lv3 tag">当前</span>
             </span>
+            <span class="term-range small muted num">{{ term.start }} — {{ term.end }}</span>
           </li>
         </ul>
+        <p class="faint tiny break">
+          来源：{{ schoolNote }}<template v-if="schoolCollectedAt">，采集于 {{ schoolCollectedAt }}</template>
+          <template v-if="schoolSourceUrl">
+            · <a :href="schoolSourceUrl" target="_blank" rel="noopener">原文</a>
+          </template>
+        </p>
+        <p v-if="schoolCaveat" class="faint tiny">{{ schoolCaveat }}</p>
       </template>
       <div v-else class="notice">
-        校历数据待补录，以深圳大学教务处公布为准。
+        校历数据待补录，以深圳大学教务部公布为准。
         <span class="block tiny">{{ schoolNote }}</span>
       </div>
     </section>
@@ -283,12 +311,52 @@ const holidaysVersion = computed(() => config?.versions?.holidays || '—')
 }
 
 .term {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 2px 12px;
   padding: 6px 0;
   border-bottom: 1px dashed var(--line);
 }
 
 .term:last-child {
   border-bottom: none;
+}
+
+/* 日期整体不拆行：`2026-03-04 — 2026-07-17` 断在中间会读成两个日期 */
+.term-range {
+  white-space: nowrap;
+}
+
+/* 窄屏放不下一行：改成名称在上、日期在下，否则名称和日期会各折两行互相错位 */
+@media (max-width: 520px) {
+  .term {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 2px;
+  }
+}
+
+/* 距寒暑假天数：数字要比说明文字显眼，一眼能读出来 */
+.term-lead {
+  font-size: 15px;
+  color: var(--text-2);
+}
+
+.term-lead .num {
+  margin: 0 4px;
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--text);
+}
+
+/* 行内小标签：和行首名称同一基线，不撑高行高 */
+.tag {
+  margin-left: 6px;
+  padding: 1px 6px;
+  font-size: 10px;
+  vertical-align: 1px;
 }
 
 .policy-foot {
