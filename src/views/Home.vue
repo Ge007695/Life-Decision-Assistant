@@ -14,6 +14,10 @@ import DecisionCard from '@/components/DecisionCard.vue'
 import ScoreBar from '@/components/ScoreBar.vue'
 import ActionList from '@/components/ActionList.vue'
 import TrendChart from '@/components/TrendChart.vue'
+import WeeklyWear from '@/modules/outing/WeeklyWear.vue'
+import SportCard from '@/modules/outing/SportCard.vue'
+import CompareCard from '@/modules/outing/CompareCard.vue'
+import HistoryCompare from '@/modules/outing/HistoryCompare.vue'
 import { useOuting } from '@/modules/outing/useOuting.js'
 
 const injectedConfig = inject('config', null)
@@ -334,10 +338,28 @@ const windowHint = computed(() =>
         日级数据只有气温与降水概率，湿度、风速、日照缺失，等级为粗估，精度低于上方当日卡片。
       </p>
     </section>
+
+    <!-- ⑥ 更多出门参考（P2）：只在取到当日天气时显示，否则这些卡都是空结论 -->
+    <template v-if="hasData">
+      <h2 class="section-title group-title">更多出门参考</h2>
+      <WeeklyWear :daily="weather?.daily || []" :today="weather?.date || ''" />
+      <SportCard :temp="weather?.temp ?? null" :humidity="weather?.humidity ?? null" />
+      <CompareCard />
+      <HistoryCompare :daily="weather?.daily || []" :today="weather?.date || ''" />
+    </template>
   </div>
 </template>
 
 <style scoped>
+/* 分组标题：和卡片内的 section-title 同级但更弱，表示「下面换一类内容」 */
+.group-title {
+  margin: 10px 0 -2px;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: var(--text-3, var(--text-2));
+}
+
 /* ---------- 抬头 ---------- */
 
 .lead {

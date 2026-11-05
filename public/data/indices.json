@@ -1,6 +1,6 @@
 {
   "meta": {
-    "version": "1.1.0",
+    "version": "1.2.0",
     "updated": "2026-11-05",
     "note": "所有阈值、权重、文案集中在本文件。代码里不允许出现未命名的数字。normalize 区间写作 [劣端, 优端]，不是 [min, max]。 每个指数节点带 version，用于 DecisionResult.evidence.configVersion：配置值改了要跟着升，否则报告里看不出结论是哪个配置算的。"
   },
@@ -204,6 +204,179 @@
       "tableRef": "clothing-table.json",
       "fallbackLevel": 3,
       "fallbackHeadline": "体感数据缺失，按当前气温参考昨日搭配"
+    },
+    "weeklyWear": {
+      "version": "1.0.0",
+      "type": "table",
+      "label": "一周衣物",
+      "tableRef": "clothing-table.json",
+      "inputs": [
+        "tempMax",
+        "tempMin"
+      ],
+      "changeEveryDays": 2,
+      "maxPerBand": 3,
+      "levels": [
+        {
+          "min": 100,
+          "level": 4,
+          "label": "完整"
+        },
+        {
+          "min": 70,
+          "level": 3,
+          "label": "基本完整"
+        },
+        {
+          "min": 40,
+          "level": 2,
+          "label": "部分"
+        },
+        {
+          "min": 0,
+          "level": 1,
+          "label": "数据不足"
+        }
+      ]
+    },
+    "sport": {
+      "version": "1.0.0",
+      "type": "rule",
+      "label": "运动适宜度",
+      "inputs": [
+        "temp",
+        "humidity",
+        "aqi",
+        "uv"
+      ],
+      "weights": {
+        "temp": 0.35,
+        "humidity": 0.2,
+        "aqi": 0.3,
+        "uv": 0.15
+      },
+      "thresholds": {
+        "temp": {
+          "idealMin": 12,
+          "idealMax": 24,
+          "penaltyPerDegree": 6,
+          "tooHotAdvice": "气温偏高，避开正午时段，注意补水",
+          "tooColdAdvice": "气温偏低，先充分热身，注意保暖"
+        },
+        "humidity": {
+          "idealMin": 30,
+          "idealMax": 70,
+          "penaltyPerDegree": 1.5,
+          "tooHumidAdvice": "湿度大，散热慢，降低强度并勤补水",
+          "tooDryAdvice": "空气干燥，注意补水与口鼻保湿"
+        },
+        "aqi": {
+          "bands": [
+            {
+              "max": 50,
+              "score": 100,
+              "label": "优",
+              "advice": ""
+            },
+            {
+              "max": 100,
+              "score": 80,
+              "label": "良",
+              "advice": ""
+            },
+            {
+              "max": 150,
+              "score": 55,
+              "label": "轻度污染",
+              "advice": "敏感人群减少户外运动时长"
+            },
+            {
+              "max": 200,
+              "score": 30,
+              "label": "中度污染",
+              "advice": "改室内运动，关窗"
+            },
+            {
+              "max": 300,
+              "score": 10,
+              "label": "重度污染",
+              "advice": "不要在户外运动"
+            },
+            {
+              "max": 9999,
+              "score": 0,
+              "label": "严重污染",
+              "advice": "停止一切户外运动"
+            }
+          ]
+        },
+        "uv": {
+          "bands": [
+            {
+              "max": 2.99,
+              "score": 100,
+              "label": "低",
+              "advice": ""
+            },
+            {
+              "max": 5.99,
+              "score": 80,
+              "label": "中等",
+              "advice": "长时间户外注意防晒"
+            },
+            {
+              "max": 7.99,
+              "score": 55,
+              "label": "高",
+              "advice": "10:00—16:00 紫外线强，改清晨或傍晚"
+            },
+            {
+              "max": 10.99,
+              "score": 30,
+              "label": "很高",
+              "advice": "避开正午，帽子与防晒霜都要"
+            },
+            {
+              "max": 99,
+              "score": 10,
+              "label": "极高",
+              "advice": "正午不要在户外停留"
+            }
+          ]
+        }
+      },
+      "levels": [
+        {
+          "min": 80,
+          "level": 4,
+          "label": "适宜",
+          "headline": "条件合适，适合户外运动"
+        },
+        {
+          "min": 60,
+          "level": 3,
+          "label": "较适宜",
+          "headline": "可以运动，注意下面几点"
+        },
+        {
+          "min": 40,
+          "level": 2,
+          "label": "一般",
+          "headline": "条件一般，建议降低强度或改时间"
+        },
+        {
+          "min": 20,
+          "level": 1,
+          "label": "不太适宜",
+          "headline": "条件不太好，优先考虑室内"
+        },
+        {
+          "min": 0,
+          "level": 0,
+          "label": "不宜",
+          "headline": "不建议户外运动"
+        }
+      ]
     }
   }
 }

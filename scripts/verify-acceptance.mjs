@@ -17,6 +17,8 @@ import { configure, run } from '../src/core/engine.js'
 import { buildDateMap, getYearNode } from '../src/services/policy.js'
 import { buildTripPlan, shiftDate } from '../src/modules/time/tripPlan.js'
 import { buildSchoolStatus, schoolTerms } from '../src/modules/time/countdown.js'
+import { buildCompare } from '../src/modules/outing/compare.js'
+import { buildHistory } from '../src/modules/outing/history.js'
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..')
 const DATA = join(ROOT, 'public', 'data')
@@ -240,6 +242,89 @@ check(
   'T-4：学期末到假期之间的空档与校历范围之外都不报错，且不推测',
   schoolGap.days === 2 && schoolOut.state === 'unknown',
   `2027-01-23 空档给 ${schoolGap.days} 天；2028-05-01 → ${schoolOut.message}`,
+)
+
+console.log('\n=== 5.4 出门模块 P2 功能验收 ===')
+
+const WEEK_DAYS = [
+  { date: '2026-11-05', tempMax: 30, tempMin: 24 },
+  { date: '2026-11-06', tempMax: 29, tempMin: 23 },
+  { date: '2026-11-07', tempMax: 22, tempMin: 14 },
+  { date: '2026-11-08', tempMax: 18, tempMin: 9 },
+  { date: '2026-11-09', tempMax: 26, tempMin: 20 },
+  { date: '2026-11-10', tempMax: 27, tempMin: 21 },
+  { date: '2026-11-11', tempMax: 25, tempMin: 19 },
+]
+const wear = run('weeklyWear', { days: WEEK_DAYS })
+check(
+  '5.4-1',
+  'O-8：7 天预报汇总成衣物件数清单，按穿衣档位分组并给套数',
+  wear.actions.length > 0 && wear.meta.totalPieces > 0 && wear.meta.bands.length > 0,
+  `${wear.meta.bands.length} 类穿搭共 ${wear.meta.totalPieces} 套：${wear.actions.join(' / ')}`,
+)
+
+const sportIdeal = run('sport', { temp: 18, humidity: 50, aqi: 30, uv: 1.5 })
+const sportBad = run('sport', { temp: 18, humidity: 50, aqi: 220, uv: 9 })
+const sportMissing = run('sport', { temp: 18, humidity: 50 })
+check(
+  '5.4-2',
+  'O-9：温度/湿度/AQI/紫外线四维分项评分，空气差时降分，缺维度时降级并说明',
+  sportIdeal.score > sportBad.score && sportMissing.degraded === true && sportIdeal.evidence.length >= 4,
+  `理想 ${sportIdeal.score} 分 → 重污染+强紫外线 ${sportBad.score} 分；缺 AQI/UV 时 degraded=${sportMissing.degraded}`,
+)
+
+const cmpWeather = (temp, precipProb) => ({
+  date: '2026-11-05',
+  temp,
+  humidity: 60,
+  windSpeed: 2,
+  precipProb,
+  solar: 500,
+  hourly: Array.from({ length: 12 }, (_, i) => ({
+    time: `2026-11-05T${String(9 + i).padStart(2, '0')}:00`,
+    temp: 26,
+    humidity: 55,
+    windSpeed: 3,
+    windDir: 'S',
+    precipProb,
+    solar: 500,
+  })),
+  daily: [
+    { date: '2026-11-05', tempMax: temp + 2, tempMin: temp - 4, precipProb },
+    { date: '2026-11-06', tempMax: temp + 1, tempMin: temp - 5, precipProb },
+  ],
+})
+const cmp = buildCompare({
+  config,
+  left: { city: { id: 'a', name: '深圳' }, weather: cmpWeather(26, 10) },
+  right: { city: { id: 'b', name: '广州' }, weather: cmpWeather(30, 60) },
+  settings: {},
+})
+check(
+  '5.4-3',
+  'O-10：两地并排对比，给出逐项差值与四项指数，且不评判哪边更好',
+  cmp.metrics.length === 4 && cmp.indices.length === 4 && Boolean(cmp.summary) && !/更好|更优/.test(cmp.summary),
+  cmp.summary,
+)
+
+const hist = buildHistory({
+  forecastDaily: [
+    { date: '2026-11-05', tempMax: 28, tempMin: 22, precipProb: 80 },
+    { date: '2026-11-06', tempMax: 27, tempMin: 21, precipProb: 60 },
+    { date: '2026-11-07', tempMax: 26, tempMin: 20, precipProb: 10 },
+  ],
+  historyDaily: [
+    { date: '2025-11-05', tempMax: 25, tempMin: 18, precip: 0 },
+    { date: '2025-11-06', tempMax: 26, tempMin: 19, precip: 3.2 },
+    { date: '2025-11-07', tempMax: 24, tempMin: 17, precip: 0.4 },
+  ],
+  today: '2026-11-05',
+})
+check(
+  '5.4-4',
+  'O-11：历史同期逐日对齐，今年用降水概率、去年用降水量，口径分开统计',
+  hist.status === 'ok' && hist.summary.thisRainDays === 2 && hist.summary.lastRainDays === 2,
+  `今年 ${hist.summary.thisRainDays} 天有雨（概率≥50%）/ 去年 ${hist.summary.lastRainDays} 天有雨（≥0.1mm）`,
 )
 
 console.log('\n=== 6.4 花钱模块验收 ===')

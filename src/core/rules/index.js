@@ -9,11 +9,13 @@ import * as drying from './drying.js'
 import * as damp from './damp.js'
 import * as umbrella from './umbrella.js'
 import * as clothing from './clothing.js'
+import * as weeklyWear from './weeklyWear.js'
+import * as sport from './sport.js'
 import * as holiday from './holiday.js'
 import * as salary from './salary.js'
 import * as installment from './installment.js'
 
-/** 顺序即首页指数条的默认展示顺序 */
-export const RULES = [drying, damp, umbrella, clothing, holiday, salary, installment]
+/** 顺序即首页指数条的默认展示顺序（首页固定四条由 useOuting 的 INDEX_IDS 决定，这里是全量注册表） */
+export const RULES = [drying, damp, umbrella, clothing, weeklyWear, sport, holiday, salary, installment]
 
 export default RULES
