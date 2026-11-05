@@ -90,7 +90,7 @@ export function evaluate(input, ctx) { ... }
 | `clothing` | `temp, humidity, windSpeed, apparentTemp?, feedbackOffset?` | 体感温度查 `clothing-table.json` |
 | `holiday` | `year?, today?` | 读 `config.holidays`，无数据年份返回“待公布” |
 | `salary` | `gross, mode: 'service'\|'salary', months?, specialDeduction?, dayRate?, workDays?` | 读 `config.taxRules` |
-| `installment` | `principal, periods, feeRate` | 返回月利率与年化，含三算法对比 |
+| `installment` | `principal, periods, feeRate, feeRateUnit?` | 返回月利率与年化，含三算法对比。**`feeRate` 默认按百分数理解**：`0.6` = 每期 0.6%。小数口径必须显式传 `feeRateUnit: 'decimal'`（`0.006`）。传错单位不报错、年化差 100 倍 |
 
 ---
 
@@ -121,10 +121,19 @@ config.holidays.years['2026'] = {
   source, sourceUrl, collectedAt,
   holidays: [{ name, start, end, days }],
   makeupWorkdays: ['2026-01-04'],
-  schoolTerms: [{ name, start, end }]
+  schoolTerms: [{ name, start, end }]      // 已废弃，统一用下面的 schoolCalendar
+}
+
+// 校历放在顶层：一个学期只维护一次，跨年学期不会在两年里各写一半
+config.holidays.schoolCalendar = {
+  source, sourceUrl, collectedAt, note,
+  terms: [{ name, kind: 'term' | 'break', start, end }],
 }
 ```
 `status: 'pending'` 是正常状态，页面显示“待公布”，**不能报错或白屏**。
+`schoolCalendar` 的 `kind` 取 `term`（学期）或 `break`（寒暑假）；缺省按 `term` 处理，
+所以老数据不会因为没写 `kind` 而失效。校历日期属于**外部事实**，
+只允许来自教务部公布或用户确认，不允许按往年推算——`note` 里必须写清转录来源。
 
 ### tax-rules.json
 `serviceIncome`（劳务报酬预扣）、`salaryIncome`（工资薪金累计预扣）、`annualSettlement`（年度汇算）。
@@ -241,10 +250,23 @@ await pullFromCloud()                   // 手动拉取，以云端覆盖本机
 只写 `owner_id = auth.uid()` 会让所有匿名访客共用一个数据桶。
 自检：`node scripts/cloud-check.mjs`（未登录查询应 0 行、写入应被 42501 拒）。
 
+### 模块层纯函数（`src/modules/`）
+```js
+import { buildCountdown, buildSchoolStatus, schoolTerms } from '@/modules/time/countdown.js'
+buildSchoolStatus(config, today)   // → { state, name?, days?, lead?, detail, term?, gap? }
+schoolTerms(config)                // → [{ name, kind, start, end }]，顶层优先、旧结构兜底
+```
+这两个函数是纯的（不读 `window`、不写存储），测试与 `verify-acceptance` 直接调用。
+`state` 只取 `inTerm` / `onBreak` / `beforeTerm` / `unknown` 四种。
+**不要在这里推"第几教学周"**——我们只有起止日期，周次要按教务部教学周历算，
+推错比不给更糟。
+
+**约定**：会被 `node --test` 直接 import 的模块一律用相对路径 import，不要用 `@` 别名，
+否则 Node 解析不到（`@` 只在 Vite 里有效）。`countdown.js`、`tripPlan.js` 都是这么做的。
+
 ---
 
 ## 六、组件层 Props（`src/components/`）
-
 | 组件 | props | emits | 说明 |
 |---|---|---|---|
 | `DecisionCard` | `result`(必填) `title` `showActions` `showEvidence` `feedbackable` `storageKey` `hero` | `feedback('cold'\|'hot')` | 结论 + 清单 + 依据折叠 |
